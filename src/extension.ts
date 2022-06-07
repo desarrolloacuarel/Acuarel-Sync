@@ -109,6 +109,7 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                 }
                 
+                /* En desarrollo para subarchivos
                 if(nombre.length > (fArray.length+1)){
                     var direccion = "";
                     for (let index = fArray.length; index < nombre.length; index++) {
@@ -116,6 +117,7 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                     terminal.sendText("robocopy " + direccion + " " + configuracion.archivo + "/"+direccion);                                     
                 }
+                */
                 
             } 
         });
