@@ -109,16 +109,18 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                 }
                 
-                /* En desarrollo para subarchivos
+                /* En desarrollo para subarchivos */
+                
                 if(nombre.length > (fArray.length+1)){
                     var direccion = "";
                     for (let index = fArray.length; index < nombre.length; index++) {
-                        direccion += "/" + nombre[index];                        
+                        direccion += nombre[index];                        
+                        if(index != (nombre.length-1)){
+                            direccion += "\\";
+                        }
                     }
-                    terminal.sendText("robocopy " + direccion + " " + configuracion.archivo + "/"+direccion);                                     
-                }
-                */
-                
+                    terminal.sendText("xcopy "+ direccion + " " + configuracion.archivo +"\\"+ direccion);
+                }                                
             } 
         });
 
