@@ -1,10 +1,12 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import { fileURLToPath } from 'url';
 import * as vscode from 'vscode';
 import configuracion from './configuracion.json';
 
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
+const terminal = vscode.window.createTerminal();
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -17,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('helloworld.helloWorld', async(uri:vscode.Uri) => {
+    let disposable = vscode.commands.registerCommand('helloworld.helloWorld', fileURLToPath => {
         // The code you place here will be executed every time your command is executed
         // Display a message box to the user
         console.log("Ejecutando");
@@ -64,8 +66,9 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage(uri.fsPath);
         */
 
-        vscode.commands.executeCommand('copyFilePath');
+        //vscode.commands.executeCommand('copyFilePath');
 
+       /*
         var originalClipboard = vscode.env.clipboard.readText();
         var auxiliar = Promise.resolve(originalClipboard);
         var valorPath;
@@ -74,6 +77,51 @@ export function activate(context: vscode.ExtensionContext) {
 
             vscode.window.showInformationMessage(values[0]);
         });
+        */
+
+        //var prueba = vscode.workspace.findFiles;
+        console.log(fileURLToPath);
+
+        var vscode2 = require("vscode");
+        var f = vscode2.workspace.workspaceFolders[0].uri.fsPath ; 
+        var fArray = f.split("\\");
+
+        var auxiliar = Promise.resolve(fileURLToPath);
+        Promise.all([auxiliar]).then(values => {
+            console.log(values);
+
+            vscode.window.showInformationMessage(values[0]._fsPath);
+
+            var nombre = values[0]._fsPath.split("\\");
+            console.log(nombre);
+
+            var fs = require('fs');
+            
+            terminal.show();
+            if(nombre.length === fArray.length){
+                terminal.sendText("xcopy /E/I . "+" " + configuracion.archivo);                
+            }else{
+                if(nombre.length === (fArray.length+1)){
+                    if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
+                        terminal.sendText("robocopy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo + "/"+nombre[(nombre.length - 1)]);                                     
+                    }else{                    
+                        terminal.sendText("copy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo);   
+                    }
+                }
+                
+                if(nombre.length > (fArray.length+1)){
+                    var direccion = "";
+                    for (let index = fArray.length; index < nombre.length; index++) {
+                        direccion += "/" + nombre[index];                        
+                    }
+                    terminal.sendText("robocopy " + direccion + " " + configuracion.archivo + "/"+direccion);                                     
+                }
+                
+            } 
+        });
+
+        
+
 
 
     });
