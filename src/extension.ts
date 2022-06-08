@@ -103,7 +103,7 @@ export function activate(context: vscode.ExtensionContext) {
             }else{
                 if(nombre.length === (fArray.length+1)){
                     if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
-                        terminal.sendText("robocopy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo + "\\" + nombre[(nombre.length - 1)] + " /Z /E");                                     
+                        terminal.sendText("robocopy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo + "\\" + nombre[(nombre.length - 1)] + " /Z/E");                                     
                     }else{                    
                         terminal.sendText("xcopy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo);   
                     }
@@ -112,6 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
                 /* En desarrollo para subarchivos */
                 
                 if(nombre.length > (fArray.length+1)){
+                    
                     var direccion = "";
                     for (let index = fArray.length; index < nombre.length; index++) {
                         direccion += nombre[index];                        
@@ -119,6 +120,7 @@ export function activate(context: vscode.ExtensionContext) {
                             direccion += "\\";
                         }
                     }
+
                     terminal.sendText("xcopy "+ direccion + " " + configuracion.archivo +"\\"+ direccion);
                     if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
                         terminal.sendText("d");                                 
