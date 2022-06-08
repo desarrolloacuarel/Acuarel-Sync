@@ -87,6 +87,7 @@ export function activate(context: vscode.ExtensionContext) {
         var fArray = f.split("\\");
 
         var auxiliar = Promise.resolve(fileURLToPath);
+        
         Promise.all([auxiliar]).then(values => {
             console.log(values);
 
@@ -96,16 +97,25 @@ export function activate(context: vscode.ExtensionContext) {
             console.log(nombre);
 
             var fs = require('fs');
+
+            var arrayIgnorar = configuracion.ignore;
+            var textoIgnorar = "";
+            for (let index = 0; index < arrayIgnorar.length; index++) {
+                textoIgnorar += arrayIgnorar[index];
+                if(index !== (arrayIgnorar.length-1)){
+                    textoIgnorar += "+";
+                }
+            }
             
             terminal.show();
             if(nombre.length === fArray.length){
-                terminal.sendText("xcopy /E/I . "+" " + configuracion.archivo);                
+                terminal.sendText("xcopy /E/I /exclude:" + configuracion.ignore + " . " + configuracion.archivo);                
             }else{
                 if(nombre.length === (fArray.length+1)){
                     if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
-                        terminal.sendText("robocopy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo + "\\" + nombre[(nombre.length - 1)] + " /Z/E");                                     
+                        terminal.sendText("robocopy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo + "\\" + nombre[(nombre.length - 1)] + " /Z /E");                                     
                     }else{                    
-                        terminal.sendText("xcopy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo);   
+                        terminal.sendText("xcopy /EXCLUDE:" + textoIgnorar + " " + nombre[(nombre.length - 1)] + " " + configuracion.archivo);      
                     }
                 }
                 
@@ -121,7 +131,7 @@ export function activate(context: vscode.ExtensionContext) {
                         }
                     }
 
-                    terminal.sendText("xcopy "+ direccion + " " + configuracion.archivo +"\\"+ direccion);
+                    terminal.sendText("xcopy /EXCLUDE:" + textoIgnorar + " " + direccion + " " + configuracion.archivo +"\\"+ direccion);
                     if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
                         terminal.sendText("d");                                 
                     }else{                    
