@@ -1,3 +1,4 @@
 {
-    "archivo": "C:\\Users\\Ordenador\\Documents\\ParaCopia"
+    "archivo": "C:\\Users\\Ordenador\\Documents\\ParaCopia",
+    "ignore": [".png"]
 }
