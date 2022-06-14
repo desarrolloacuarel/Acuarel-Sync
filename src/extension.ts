@@ -95,32 +95,35 @@ export function activate(context: vscode.ExtensionContext) {
             var nombre = values[0]._fsPath.split("\\");
             console.log(nombre);
 
-            var fs = require('fs');
+            var listaIgnorar = configuracion.ignore;
+            var comandoIgnorar = "";
+            if(listaIgnorar.length > 0){
+                for (let index = 0; index < listaIgnorar.length; index++) {
+                    comandoIgnorar += "--exclude '"+listaIgnorar[index]+"' ";                    
+                }                
+            }
             
             terminal.show();
             if(nombre.length === fArray.length){
-                /* wsl rsync -arvz . /mnt/c/Users/Ordenador/Documents/ParaCopia */
-                terminal.sendText("wsl rsync -arvz . " + " " + configuracion.archivo);                
-            }else{
+                /* wsl rsync -R -arvz --exclude={'',''} . /mnt/c/Users/Ordenador/Documents/ParaCopia */
+                terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar+". " + configuracion.archivo);                
+            }else{                            
                 if(nombre.length === (fArray.length+1)){
-                    if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
-                        terminal.sendText("wsl rsync -arvz " + nombre[(nombre.length - 1)] + " " + configuracion.archivo + "\\" + nombre[(nombre.length - 1)] + " /Z /E");                                     
-                    }else{                    
-                        terminal.sendText("wsl rsync -arvz " + nombre[(nombre.length - 1)] + " " + configuracion.archivo);   
-                    }
+                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar + nombre[(nombre.length - 1)] + " " + configuracion.archivo);                                     
                 }
-                
-                /* En desarrollo para subarchivos */
+                                
+                /* Para subarchivos */
                 
                 if(nombre.length > (fArray.length+1)){
                     var direccion = "";
                     for (let index = fArray.length; index < nombre.length; index++) {
                         direccion += nombre[index];                        
                         if(index != (nombre.length-1)){
-                            direccion += "\\";
+                            direccion += "/";
                         }
                     }
-                    terminal.sendText("wsl rsync -arvz "+ direccion + " " + configuracion.archivo +"\\"+ direccion);
+                    
+                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar + direccion + " " + configuracion.archivo +"/");
                     /*
                     if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
                         terminal.sendText("d");                                 
