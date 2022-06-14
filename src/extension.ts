@@ -53,7 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
                 terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar+". " + configuracion.archivo);                
             }else{                            
                 if(nombre.length === (fArray.length+1)){
-                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar + nombre[(nombre.length - 1)] + " " + configuracion.archivo);                                     
+                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar + "'"+ nombre[(nombre.length - 1)] + "' " + configuracion.archivo);                                     
                 }
                                 
                 /* Para subarchivos */
@@ -67,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
                         }
                     }
                     
-                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar + direccion + " " + configuracion.archivo +"/");          
+                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar +"'"+ direccion + "' " + configuracion.archivo +"/");          
                 }                                
             } 
         });
