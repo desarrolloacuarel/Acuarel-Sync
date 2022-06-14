@@ -68,14 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
                         }
                     }
                     
-                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar + direccion + " " + configuracion.archivo +"/");
-                    /*
-                    if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
-                        terminal.sendText("d");                                 
-                    }else{                    
-                        terminal.sendText("f"); 
-                    }      
-                    */              
+                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar + direccion + " " + configuracion.archivo +"/");          
                 }                                
             } 
         });
