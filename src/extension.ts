@@ -24,66 +24,10 @@ export function activate(context: vscode.ExtensionContext) {
         // Display a message box to the user
         console.log("Ejecutando");
         
-        /* Abrir un documento
-        var pos1 = new vscode.Position(10, 4);
-        var openPath = vscode.Uri.file('C:/Users/Ordenador/AppData/Local/Programs/Microsoft VS Code/resources/app/extensions/helloworld/src/prueba.txt');
-        vscode.workspace.openTextDocument(openPath).then(doc => {
-            vscode.window.showTextDocument(doc).then(editor => {
-                // Line added - by having a selection at the same position twice, the cursor jumps there
-                editor.selections = [new vscode.Selection(pos1, pos1)];
-
-                // And the visible range jumps there too
-                var range = new vscode.Range(pos1, pos1);
-
-                editor.revealRange(range);
-            });
-        });
-        */
-
-        /* Direccion del archivo que este abierto
-        var vscode2 = require("vscode");
-        var path = require("path");    
-        var currentlyOpenTabfilePath = vscode2.window.activeTextEditor.document.fileName;
-        var currentlyOpenTabfileName = path.basename(currentlyOpenTabfilePath);
-        
-        vscode.window.showInformationMessage(currentlyOpenTabfilePath);            
-        //vscode.window.showInformationMessage(currentlyOpenTabfileName);
-
-        const terminal = vscode.window.createTerminal();
-        terminal.show();
-        terminal.sendText("copy " + currentlyOpenTabfileName + " " + configuracion.archivo);    
-        vscode.window.showInformationMessage('Hello World from ASD!');
-        */
-
-        /* Direccion del explorer
-        var vscode2 = require("vscode");
-        let wf = vscode2.workspace.workspaceFolders[0].uri.path ;
-        let f = vscode2.workspace.workspaceFolders[0].uri.fsPath ; 
-
-        var message = `YOUR-EXTENSION: folder: ${wf} - ${f}` ;
-
-        vscode.window.showInformationMessage(message);
-        vscode.window.showInformationMessage(uri.fsPath);
-        */
-
-        //vscode.commands.executeCommand('copyFilePath');
-
-       /*
-        var originalClipboard = vscode.env.clipboard.readText();
-        var auxiliar = Promise.resolve(originalClipboard);
-        var valorPath;
-        Promise.all([auxiliar]).then(values => {
-            console.log(values);
-
-            vscode.window.showInformationMessage(values[0]);
-        });
-        */
-
-        //var prueba = vscode.workspace.findFiles;
         console.log(fileURLToPath);
 
-        var vscode2 = require("vscode");
-        var f = vscode2.workspace.workspaceFolders[0].uri.fsPath ; 
+        var vscode = require("vscode");
+        var f = vscode.workspace.workspaceFolders[0].uri.fsPath ; 
         var fArray = f.split("\\");
 
         var auxiliar = Promise.resolve(fileURLToPath);
@@ -95,6 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
             var nombre = values[0]._fsPath.split("\\");
             console.log(nombre);
 
+            /* Definido con un array en 'configuracion.json'*/ 
             var listaIgnorar = configuracion.ignore;
             var comandoIgnorar = "";
             if(listaIgnorar.length > 0){
@@ -105,7 +50,7 @@ export function activate(context: vscode.ExtensionContext) {
             
             terminal.show();
             if(nombre.length === fArray.length){
-                /* wsl rsync -R -arvz --exclude={'',''} . /mnt/c/Users/Ordenador/Documents/ParaCopia */
+                /* wsl rsync -R -arvz --exclude={'',''} .(Origen) /mnt/c/Users/Ordenador/Documents/ParaCopia(Destino) */
                 terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar+". " + configuracion.archivo);                
             }else{                            
                 if(nombre.length === (fArray.length+1)){
