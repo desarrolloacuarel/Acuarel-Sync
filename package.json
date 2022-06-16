@@ -1,5 +1,5 @@
 {
-    "name": "helloworld",
+    "name": "acuarelsync",
     "displayName": "",
     "description": "",
     "version": "0.0.1",
@@ -10,24 +10,36 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:helloworld.helloWorld"
+        "onCommand:acuarelsync.sync",
+        "onCommand:acuarelsync.configuration"
     ],
     "main": "./out/extension.js",
     "contributes": {
         "menus": {
             "explorer/context": [
                 {
-                    "command": "helloworld.helloWorld",
-                    "group": "prueba",
+                    "command": "acuarelsync.sync",
+                    "group": "Acuarel",
                     "when": "isFileSystemResource"
-                }
+                },
+                {
+                    "command": "acuarelsync.configuration",
+                    "group": "Acuarel",
+                    "when": "filesExplorerFocus"
+                }                
             ]
         },
         "commands": [
             {
-                "command": "helloworld.helloWorld",
-                "title": "Hello World",
-                "group": "Prueba"
+                "command": "acuarelsync.sync",
+                "title": "Acuarel Sync",
+                "group": "Acuarel"
+            },
+            {
+                "command": "acuarelsync.configuration",
+                "title": "Acuarel Sync Configuration",
+                "group": "Acuarel"
+
             }
         ]
     },

@@ -13,17 +13,18 @@ const terminal = vscode.window.createTerminal();
 export function activate(context: vscode.ExtensionContext) {
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "helloworld" is now active!');            
+    console.log('Congratulations, your extension "Acuarel Sync" is now active!');       
 
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('helloworld.helloWorld', fileURLToPath => {
+    let disposable = vscode.commands.registerCommand('acuarelsync.sync', fileURLToPath => {
         // The code you place here will be executed every time your command is executed
         // Display a message box to the user
+       
         console.log("Ejecutando");
         
-        console.log(fileURLToPath);
+        console.log(fileURLToPath);        
 
         var vscode = require("vscode");
         var f = vscode.workspace.workspaceFolders[0].uri.fsPath ; 
@@ -50,10 +51,10 @@ export function activate(context: vscode.ExtensionContext) {
             terminal.show();
             if(nombre.length === fArray.length){
                 /* wsl rsync -R -arvz --exclude={'',''} .(Origen) /mnt/c/Users/Ordenador/Documents/ParaCopia(Destino) */
-                terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar+". " + configuracion.archivo);                
+                terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar+". " + configuracion.destino);                
             }else{                            
                 if(nombre.length === (fArray.length+1)){
-                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar + "'"+ nombre[(nombre.length - 1)] + "' " + configuracion.archivo);                                     
+                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar + "'"+ nombre[(nombre.length - 1)] + "' " + configuracion.destino);                                     
                 }
                                 
                 /* Para subarchivos */
@@ -67,7 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
                         }
                     }
                     
-                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar +"'"+ direccion + "' " + configuracion.archivo +"/");          
+                    terminal.sendText("wsl rsync -R -arvz "+comandoIgnorar +"'"+ direccion + "' " + configuracion.destino +"/");          
                 }                                
             } 
         });
@@ -77,8 +78,41 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     });
+
+    
+    let disposable2 = vscode.commands.registerCommand('acuarelsync.configuration', async fileURLToPath => {
+        
+        vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
+        //console.log(fileURLToPath);
+
+        terminal.show();
+        terminal.sendText("wsl mkdir .acuarelsync");    
+
+        const URLS = await vscode.workspace.findFiles('.acuarelsync/configuracion.json');
+        console.log(URLS[0].path);
+
+        const fs = require('fs');
+
+        let fileContent = "";
+
+        try {
+            const data = fs.readFileSync(URLS[0].path.substring(1, (URLS[0].path.length)));
+            fileContent = data.toString();
+            console.log(fileContent);
+        } catch (err) {
+            console.error(err);
+        }
+
+        let json = JSON.parse(fileContent);
+        console.log(json.destino);
+
+        //terminal.sendText("copy 'C:/Users/Ordenador/AppData/Local/Programs/Microsoft VS Code/resources/app/extensions/acuarel-sync/src/configuracion-plantilla.json' .acuarelsync/configuracion.json");        
+
+    });
+
     
     context.subscriptions.push(disposable);
+    context.subscriptions.push(disposable2);
 }
   
 // this method is called when your extension is deactivated
