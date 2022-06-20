@@ -18,27 +18,36 @@
         "menus": {
             "explorer/context": [
                 {
+                    "submenu": "Acuarel",
+                    "group": "acuarel.group"
+                }
+            ],
+            "Acuarel": [
+                {
                     "command": "acuarelsync.sync",
-                    "group": "Acuarel",
-                    "when": "isFileSystemResource"
+                    "group": "acuarel.group"
                 },
                 {
                     "command": "acuarelsync.configuration",
-                    "group": "Acuarel",
-                    "when": "filesExplorerFocus"
+                    "group": "acuarel.group"
                 }
             ]
         },
-        "commands": [
-            {
+        "submenus": [{
+            "label": "Acuarel Sync",
+            "id": "Acuarel"
+        }],
+
+
+        "commands": [{
                 "command": "acuarelsync.sync",
-                "title": "Acuarel Sync",
-                "group": "Acuarel"
+                "title": "Sincronizar",
+                "group": "acuarel.group"
             },
             {
                 "command": "acuarelsync.configuration",
-                "title": "Acuarel Sync Configuration",
-                "group": "Acuarel"
+                "title": "Configuracion",
+                "group": "acuarel.group"
             }
         ]
     },

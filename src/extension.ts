@@ -11,38 +11,22 @@ let myvscode = require("vscode");
 let basepath = myvscode.workspace.workspaceFolders[0].uri.fsPath;
 console.log(basepath);
 
+const fs = require('fs');
+
+let configuracion: {
+    ignore: any; destino: string;
+};
+
 
 const terminal = vscode.window.createTerminal();
-const prueba = 'ola';
 // this method is called when your extension is activated. your extension is activated the very first time the command is executed
 
-export async function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext) {
 
     try {
         // Use the console to output diagnostic information (console.log) and errors (console.error)
         // This line of code will only be executed once when your extension is activated
         console.log('Congratulations, your extension "Acuarel Sync" is now active!');
-
-        /* BUSQUEDA DEL ARCHIVO DE CONFIGURACION EN EL DIRECTORIO DEL WORKSPACE */
-
-        const fs = require('fs');
-
-        let fileContent = "";
-        let configuracion: {
-            ignore: any; destino: string;
-        };
-
-        try {
-            const data = fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
-            fileContent = data.toString();
-            console.log(fileContent);
-
-            configuracion = JSON.parse(fileContent);
-        } catch (err) {
-            console.error(err);
-            console.log("Se ha producido un error al buscar el archivo de configuracion");
-            //Crear un control por si no existe el archivo de configuracion en el workspace ¿Y crearlo?
-        }
 
 
         /**
@@ -55,6 +39,22 @@ export async function activate(context: vscode.ExtensionContext) {
         let sincronizar = vscode.commands.registerCommand('acuarelsync.sync', fileURLToPath => {
             // The code you place here will be executed every time your command is executed
             // Display a message box to the user
+
+            /* BUSQUEDA DEL ARCHIVO DE CONFIGURACION EN EL DIRECTORIO DEL WORKSPACE */
+
+            let fileContent = "";
+
+            try {
+                const data = fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
+                fileContent = data.toString();
+                console.log(fileContent);
+
+                configuracion = JSON.parse(fileContent);
+            } catch (err) {
+                console.error(err);
+                console.log("Se ha producido un error al buscar el archivo de configuracion");
+            }
+
             try {
                 console.log("Ejecutando");
 
@@ -114,17 +114,19 @@ export async function activate(context: vscode.ExtensionContext) {
         });
 
 
-        let crearConfiguracion = vscode.commands.registerCommand('acuarelsync.configuration', async fileURLToPath => {
+        let crearConfiguracion = vscode.commands.registerCommand('acuarelsync.configuration', fileURLToPath => {
 
             vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
+
+            var configPath = basepath + '/.acuarelsync/configuracion.json';
 
             try {
                 fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
 
                 vscode.window.showInformationMessage("Ya existe un archivo de configuración en este directorio, se mostrará en pantalla");
-                
+
                 var pos1 = new vscode.Position(10, 4);
-                var openPath = vscode.Uri.file(basepath + '/.acuarelsync/configuracion.json');
+                var openPath = vscode.Uri.file(configPath);
                 vscode.workspace.openTextDocument(openPath).then(doc => {
                     vscode.window.showTextDocument(doc).then(editor => {
                         // Line added - by having a selection at the same position twice, the cursor jumps there
@@ -133,17 +135,16 @@ export async function activate(context: vscode.ExtensionContext) {
                         var range = new vscode.Range(pos1, pos1);
                         editor.revealRange(range);
                     });
-                });                
+                });
             } catch (err) {
                 //console.log("Error: " + err);
 
-                var configPath = basepath + '/.acuarelsync/configuracion.json';
 
-                return fse
+                fse
                     .outputJson(
                         configPath,
                         {
-                            destino: "/mnt/c/Users/Ordenador/Documents/ParaCopia",
+                            destino: "",
                             ignore: [],
                         },
                         { spaces: 4 }
