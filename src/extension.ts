@@ -5,7 +5,7 @@ import * as fse from 'fs-extra';
 
 'use strict';
 
-Object.defineProperty(exports, "__esModule", { value: true});
+Object.defineProperty(exports, "__esModule", { value: true });
 
 let myvscode = require("vscode");
 let basepath = myvscode.workspace.workspaceFolders[0].uri.fsPath;
@@ -17,23 +17,23 @@ const prueba = 'ola';
 // this method is called when your extension is activated. your extension is activated the very first time the command is executed
 
 export async function activate(context: vscode.ExtensionContext) {
-    
-    try{
+
+    try {
         // Use the console to output diagnostic information (console.log) and errors (console.error)
         // This line of code will only be executed once when your extension is activated
         console.log('Congratulations, your extension "Acuarel Sync" is now active!');
 
-        /* BUSQUEDA DEL ARCHIVO DE CONFIGURACION EN EL DIRECTORIO DEL WORKSPACE */    
-        
+        /* BUSQUEDA DEL ARCHIVO DE CONFIGURACION EN EL DIRECTORIO DEL WORKSPACE */
+
         const fs = require('fs');
 
         let fileContent = "";
         let configuracion: {
-            ignore: any;destino: string;
+            ignore: any; destino: string;
         };
 
         try {
-            const data = fs.readFileSync(basepath+'/.acuarelsync/configuracion.json');
+            const data = fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
             fileContent = data.toString();
             console.log(fileContent);
 
@@ -50,9 +50,9 @@ export async function activate(context: vscode.ExtensionContext) {
          * Now provide the implementation of the command with registerCommand
          * The commandId parameter must match the command field in package.json
          */
-        
-            
-        let disposable = vscode.commands.registerCommand('acuarelsync.sync', fileURLToPath => {
+
+
+        let sincronizar = vscode.commands.registerCommand('acuarelsync.sync', fileURLToPath => {
             // The code you place here will be executed every time your command is executed
             // Display a message box to the user
             try {
@@ -114,34 +114,47 @@ export async function activate(context: vscode.ExtensionContext) {
         });
 
 
-        let disposable2 = vscode.commands.registerCommand('acuarelsync.configuration', async fileURLToPath => {
+        let crearConfiguracion = vscode.commands.registerCommand('acuarelsync.configuration', async fileURLToPath => {
 
-            vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration"); 
+            vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
 
             try {
-                fs.readFileSync(basepath+'/.acuarelsync/configuracion.json');
-                vscode.window.showInformationMessage("Ya existe un archivo de configuración en este directorio, NO se creará de segunda");
-            } catch (err) {
-                console.log("Error: " + err);
+                fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
+
+                vscode.window.showInformationMessage("Ya existe un archivo de configuración en este directorio, se mostrará en pantalla");
                 
-                var configPath = basepath+'/.acuarelsync/configuracion.json';
+                var pos1 = new vscode.Position(10, 4);
+                var openPath = vscode.Uri.file(basepath + '/.acuarelsync/configuracion.json');
+                vscode.workspace.openTextDocument(openPath).then(doc => {
+                    vscode.window.showTextDocument(doc).then(editor => {
+                        // Line added - by having a selection at the same position twice, the cursor jumps there
+                        editor.selections = [new vscode.Selection(pos1, pos1)];
+                        // And the visible range jumps there too
+                        var range = new vscode.Range(pos1, pos1);
+                        editor.revealRange(range);
+                    });
+                });                
+            } catch (err) {
+                //console.log("Error: " + err);
+
+                var configPath = basepath + '/.acuarelsync/configuracion.json';
 
                 return fse
-            .outputJson(
-              configPath,
-              {
-                destino: "/mnt/c/Users/Ordenador/Documents/ParaCopia",
-                ignore: [],
-              },
-              { spaces: 4 }
-            )
-            .then(() => showTextDocument(vscode.Uri.file(configPath)));
+                    .outputJson(
+                        configPath,
+                        {
+                            destino: "/mnt/c/Users/Ordenador/Documents/ParaCopia",
+                            ignore: [],
+                        },
+                        { spaces: 4 }
+                    )
+                    .then(() => showTextDocument(vscode.Uri.file(configPath)));
             }
         });
 
 
-        context.subscriptions.push(disposable);
-        context.subscriptions.push(disposable2);
+        context.subscriptions.push(sincronizar);
+        context.subscriptions.push(crearConfiguracion);
 
     } catch (err) {
         console.log(err);
@@ -150,7 +163,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 export function showTextDocument(uri: vscode.Uri, option?: vscode.TextDocumentShowOptions) {
     return vscode.window.showTextDocument(uri, option);
-  }
+}
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
