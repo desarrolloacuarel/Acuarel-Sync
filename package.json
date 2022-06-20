@@ -24,7 +24,11 @@
             ],
             "Acuarel": [
                 {
-                    "command": "acuarelsync.sync",
+                    "command": "acuarelsync.sync1",
+                    "group": "acuarel.group"
+                },
+                {
+                    "command": "acuarelsync.sync2",
                     "group": "acuarel.group"
                 },
                 {
@@ -39,14 +43,20 @@
         }],
 
 
-        "commands": [{
-                "command": "acuarelsync.sync",
-                "title": "Sincronizar",
+        "commands": [
+            {
+                "command": "acuarelsync.sync1",
+                "title": "Sincronizar Destino 1",
                 "group": "acuarel.group"
             },
             {
                 "command": "acuarelsync.configuration",
                 "title": "Configuracion",
+                "group": "acuarel.group"
+            },
+            {
+                "command": "acuarelsync.sync2",
+                "title": "Sincronizar Destino 2",
                 "group": "acuarel.group"
             }
         ]
