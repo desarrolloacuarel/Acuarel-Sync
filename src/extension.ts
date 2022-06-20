@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as fse from 'fs-extra';
+import { Console } from 'console';
 
 'use strict';
 
@@ -39,6 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
         let sincronizar = vscode.commands.registerCommand('acuarelsync.sync', fileURLToPath => {
             // The code you place here will be executed every time your command is executed
             // Display a message box to the user
+
 
             /* BUSQUEDA DEL ARCHIVO DE CONFIGURACION EN EL DIRECTORIO DEL WORKSPACE */
 
