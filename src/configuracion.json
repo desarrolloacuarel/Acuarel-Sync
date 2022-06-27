@@ -1,3 +1,20 @@
 {
-    "archivo": "C:\\Users\\Ordenador\\Documents\\ParaCopia"
+    "_comment": "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
+    "_comment2": "Uses SSH access",
+    "dest1":{
+        "destination": "/mnt/c/Users/Ordenador/Documents/ParaCopia",
+        "parameters": "-R -arvz",
+        "ignore": []
+    },
+    "dest2":{
+        "destination": "/mnt/c/Users/Ordenador/Documents/ParaCopia2",
+        "parameters": "-R -arvz",
+        "ignore": []
+    },
+    "dest3":{
+        "_comment": "Utiliza un acceso SSH",
+        "remote": "pruebasweb.net@pruebasweb.net:/var/www/vhosts/pruebasweb.net/httpdocs",
+        "parameters": "-av",
+        "ignore": []
+    }
 }

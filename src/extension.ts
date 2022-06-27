@@ -1,142 +1,243 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { fileURLToPath } from 'url';
 import * as vscode from 'vscode';
-import configuracion from './configuracion.json';
+import * as fse from 'fs-extra';
 
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-const terminal = vscode.window.createTerminal();
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+Object.defineProperty(exports, "__esModule", { value: true });
+
+let myvscode = require("vscode");
+let basepath = myvscode.workspace.workspaceFolders[0].uri.fsPath;
+console.log(basepath);
+
+const fs = require('fs');
+
+var configuracion: any;
+
+
+const terminal = vscode.window.createTerminal();
+// this method is called when your extension is activated. your extension is activated the very first time the command is executed
 
 export function activate(context: vscode.ExtensionContext) {
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "helloworld" is now active!');            
 
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('helloworld.helloWorld', fileURLToPath => {
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
-        console.log("Ejecutando");
-        
-        /* Abrir un documento
-        var pos1 = new vscode.Position(10, 4);
-        var openPath = vscode.Uri.file('C:/Users/Ordenador/AppData/Local/Programs/Microsoft VS Code/resources/app/extensions/helloworld/src/prueba.txt');
-        vscode.workspace.openTextDocument(openPath).then(doc => {
-            vscode.window.showTextDocument(doc).then(editor => {
-                // Line added - by having a selection at the same position twice, the cursor jumps there
-                editor.selections = [new vscode.Selection(pos1, pos1)];
+    try {
+        // Use the console to output diagnostic information (console.log) and errors (console.error)
+        // This line of code will only be executed once when your extension is activated
+        console.log('Congratulations, your extension "Acuarel Sync" is now active!');
 
-                // And the visible range jumps there too
-                var range = new vscode.Range(pos1, pos1);
 
-                editor.revealRange(range);
-            });
+        /**
+         * The command has been defined in the package.json file
+         * Now provide the implementation of the command with registerCommand
+         * The commandId parameter must match the command field in package.json
+         */
+
+
+        /* Sincronizar1 y Sincronizar2 sincronizan el servidor con los archivos locales*/
+        let sincronizar1 = vscode.commands.registerCommand('acuarelsync.sync1', fileURLToPath => {
+            buscarConfiguracion();
+            sincronizarServidor(fileURLToPath, configuracion.dest1);
         });
-        */
 
-        /* Direccion del archivo que este abierto
-        var vscode2 = require("vscode");
-        var path = require("path");    
-        var currentlyOpenTabfilePath = vscode2.window.activeTextEditor.document.fileName;
-        var currentlyOpenTabfileName = path.basename(currentlyOpenTabfilePath);
-        
-        vscode.window.showInformationMessage(currentlyOpenTabfilePath);            
-        //vscode.window.showInformationMessage(currentlyOpenTabfileName);
-
-        const terminal = vscode.window.createTerminal();
-        terminal.show();
-        terminal.sendText("copy " + currentlyOpenTabfileName + " " + configuracion.archivo);    
-        vscode.window.showInformationMessage('Hello World from ASD!');
-        */
-
-        /* Direccion del explorer
-        var vscode2 = require("vscode");
-        let wf = vscode2.workspace.workspaceFolders[0].uri.path ;
-        let f = vscode2.workspace.workspaceFolders[0].uri.fsPath ; 
-
-        var message = `YOUR-EXTENSION: folder: ${wf} - ${f}` ;
-
-        vscode.window.showInformationMessage(message);
-        vscode.window.showInformationMessage(uri.fsPath);
-        */
-
-        //vscode.commands.executeCommand('copyFilePath');
-
-       /*
-        var originalClipboard = vscode.env.clipboard.readText();
-        var auxiliar = Promise.resolve(originalClipboard);
-        var valorPath;
-        Promise.all([auxiliar]).then(values => {
-            console.log(values);
-
-            vscode.window.showInformationMessage(values[0]);
+        let sincronizar2 = vscode.commands.registerCommand('acuarelsync.sync2', fileURLToPath => {
+            buscarConfiguracion();
+            sincronizarServidor(fileURLToPath, configuracion.dest2);
         });
-        */
 
-        //var prueba = vscode.workspace.findFiles;
-        console.log(fileURLToPath);
+        /* Sincronizar3 sincroniza el local con los archivos del servidor*/ 
+        let sincronizar3 = vscode.commands.registerCommand('acuarelsync.sync3', fileURLToPath => {
+            buscarConfiguracion();
+            sincronizarLocal(fileURLToPath, configuracion.dest3);
+        });
 
-        var vscode2 = require("vscode");
-        var f = vscode2.workspace.workspaceFolders[0].uri.fsPath ; 
+        /* Comprueba si existe el archivo de configuracion y si no existe crea uno con valores vacios */ 
+        let crearConfiguracion = vscode.commands.registerCommand('acuarelsync.configuration', fileURLToPath => {
+
+            vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
+
+            var configPath = basepath + '/.acuarelsync/configuracion.json';
+
+            try {
+                fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
+
+                vscode.window.showInformationMessage("Ya existe un archivo de configuración en este directorio, se mostrará en pantalla");
+
+                var pos1 = new vscode.Position(10, 4);
+                var openPath = vscode.Uri.file(configPath);
+                vscode.workspace.openTextDocument(openPath).then(doc => {
+                    vscode.window.showTextDocument(doc).then(editor => {
+                        // Line added - by having a selection at the same position twice, the cursor jumps there
+                        editor.selections = [new vscode.Selection(pos1, pos1)];
+                        // And the visible range jumps there too
+                        var range = new vscode.Range(pos1, pos1);
+                        editor.revealRange(range);
+                    });
+                });
+            } catch (err) {
+                fse
+                    .outputJson(
+                        configPath,
+                        {
+                            _comment: "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
+                            _comment2: "Uses SSH access",
+                            dest1: {
+                                destination: "",
+                                parameters: "",
+                                ignore: [],
+                            },
+                            dest2: {
+                                destination: "",
+                                parameters: "",
+                                ignore: [],
+                            },
+                            dest3: {
+                                remote: "",
+                                parameters: "",
+                                ignore: [],
+                            }
+                        },
+                        { spaces: 4 }
+                    )
+                    .then(() => showTextDocument(vscode.Uri.file(configPath)));
+            }
+        });
+
+
+        context.subscriptions.push(sincronizar1);
+        context.subscriptions.push(sincronizar2);
+        context.subscriptions.push(sincronizar3);
+        context.subscriptions.push(crearConfiguracion);
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/* Busqueda del archivo de configuracion en el directorio del workspace */
+function buscarConfiguracion() {
+    let fileContent = "";
+
+    try {
+        const data = fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
+        fileContent = data.toString();
+        console.log(fileContent);
+
+        configuracion = JSON.parse(fileContent);
+    } catch (err) {
+        console.error(err);
+        console.log("Se ha producido un error al buscar el archivo de configuracion");
+    }
+}
+
+/* Sincronizar los archivos del servidor con los archivos locales */
+function sincronizarServidor(fileURLToPath: any, config: any) {
+    try {
+        console.log("Ejecutando");    
+
+        var vscode = require("vscode");
+        var f = basepath;
         var fArray = f.split("\\");
 
-        var auxiliar = Promise.resolve(fileURLToPath);
+        let auxiliar = Promise.resolve(fileURLToPath);
         Promise.all([auxiliar]).then(values => {
-            console.log(values);
-
-            vscode.window.showInformationMessage(values[0]._fsPath);
 
             var nombre = values[0]._fsPath.split("\\");
-            console.log(nombre);
 
-            var fs = require('fs');
-            
-            terminal.show();
-            if(nombre.length === fArray.length){
-                terminal.sendText("xcopy /E/I . "+" " + configuracion.archivo);                
-            }else{
-                if(nombre.length === (fArray.length+1)){
-                    if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
-                        terminal.sendText("robocopy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo + "\\" + nombre[(nombre.length - 1)] + " /Z /E");                                     
-                    }else{                    
-                        terminal.sendText("xcopy " + nombre[(nombre.length - 1)] + " " + configuracion.archivo);   
-                    }
+            /* Definido con un array en 'configuracion.json'*/
+            var listaIgnorar = config.ignore;
+            var comandoIgnorar = "";
+            if (listaIgnorar.length > 0) {
+                for (let index = 0; index < listaIgnorar.length; index++) {
+                    comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
                 }
-                
-                /* En desarrollo para subarchivos */
-                
-                if(nombre.length > (fArray.length+1)){
+            }
+
+            terminal.show();
+            if (nombre.length === fArray.length) {
+                terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + ". " + config.destination);
+            } else {
+                if (nombre.length === (fArray.length + 1)) {
+                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destination);
+                }
+
+                /* Para subarchivos */
+
+                if (nombre.length > (fArray.length + 1)) {
                     var direccion = "";
                     for (let index = fArray.length; index < nombre.length; index++) {
-                        direccion += nombre[index];                        
-                        if(index != (nombre.length-1)){
-                            direccion += "\\";
+                        direccion += nombre[index];
+                        if (index != (nombre.length - 1)) {
+                            direccion += "/";
                         }
                     }
-                    terminal.sendText("xcopy "+ direccion + " " + configuracion.archivo +"\\"+ direccion);
-                    if(fs.existsSync(values[0]._fsPath) && fs.lstatSync(values[0]._fsPath).isDirectory()){
-                        terminal.sendText("d");                                 
-                    }else{                    
-                        terminal.sendText("f"); 
-                    }                    
-                }                                
-            } 
+
+                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + direccion + "' " + config.destination + "/");
+                }
+            }
         });
 
-        
-
-
-
-    });
-    
-    context.subscriptions.push(disposable);
+    } catch (err) {
+        vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
+    }
 }
-  
+
+/* Sincronizar los archivos locales con los del servidor */
+function sincronizarLocal(fileURLToPath: any, config: any) {
+    try {
+        console.log("Ejecutando");      
+
+        var vscode = require("vscode");
+        var f = basepath;
+        var fArray = f.split("\\");
+
+        let auxiliar = Promise.resolve(fileURLToPath);
+        Promise.all([auxiliar]).then(values => {
+
+            var nombre = values[0]._fsPath.split("\\");
+
+            /* Definido con un array en 'configuracion.json'*/
+            var listaIgnorar = config.ignore;
+            var comandoIgnorar = "";
+            if (listaIgnorar.length > 0) {
+                for (let index = 0; index < listaIgnorar.length; index++) {
+                    comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
+                }
+            }
+
+            terminal.show();
+            if (nombre.length === fArray.length) {
+                terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + config.remote + " .");
+            } else {
+                if (nombre.length === (fArray.length + 1)) {
+                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + config.remote + " '" + nombre[(nombre.length - 1)] + "'");
+                }
+
+                /* Para subarchivos */
+
+                if (nombre.length > (fArray.length + 1)) {
+                    var direccion = "";
+                    for (let index = fArray.length; index < nombre.length; index++) {
+                        direccion += nombre[index];
+                        if (index != (nombre.length - 1)) {
+                            direccion += "/";
+                        }
+                    }
+
+                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + config.remote + "/" + " '" + direccion + "'");
+                }
+            }
+        });
+
+    } catch (err) {
+        vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
+    }
+}
+
+export function showTextDocument(uri: vscode.Uri, option?: vscode.TextDocumentShowOptions) {
+    return vscode.window.showTextDocument(uri, option);
+}
+
+
 // this method is called when your extension is deactivated
 export function deactivate() { }

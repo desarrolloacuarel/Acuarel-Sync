@@ -1,16 +1,12 @@
-# helloworld README
+# Acuarel-sync README
 
-This is the README for your extension "helloworld". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "Acuarel-Rsync". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+This extension allows to create a configuration file that contains the information to access 2 servers for sending files and 1 server access to bring the files from the server to local. All of this options are located in the context menu of the explorer.
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Dest1 and Dest2 in the configuration file define the 2 servers to connect for sending files from your workspace and Dest3 defines the server to get the files from.
 
 ## Requirements
 
