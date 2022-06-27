@@ -2,7 +2,7 @@
     "name": "acuarelsync",
     "displayName": "",
     "description": "",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "publisher": "Acuarel",
     "engines": {
         "vscode": "^1.67.0"
