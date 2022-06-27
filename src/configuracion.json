@@ -11,8 +11,9 @@
         "ignore": []
     },
     "dest3":{
-        "remoto": "desarrollopruebas@pruebasweb.net:/var/www/vhosts/pruebasweb.net/httpdocs",
-        "parametros": "-R -arvz",
+        "_comment": "Utiliza un acceso SSH",
+        "remoto": "pruebasweb.net@pruebasweb.net:/var/www/vhosts/pruebasweb.net/httpdocs",
+        "parametros": "-av",
         "ignore": []
     }
 }

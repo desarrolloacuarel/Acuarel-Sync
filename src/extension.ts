@@ -2,7 +2,6 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as fse from 'fs-extra';
-import { fileURLToPath } from 'url';
 
 'use strict';
 
@@ -35,6 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
          */
 
 
+        /* Sincronizar1 y Sincronizar2 sincronizan el servidor con los archivos locales*/
         let sincronizar1 = vscode.commands.registerCommand('acuarelsync.sync1', fileURLToPath => {
             buscarConfiguracion();
             sincronizarServidor(fileURLToPath, configuracion.dest1);
@@ -45,12 +45,13 @@ export function activate(context: vscode.ExtensionContext) {
             sincronizarServidor(fileURLToPath, configuracion.dest2);
         });
 
+        /* Sincronizar3 sincroniza el local con los archivos del servidor*/ 
         let sincronizar3 = vscode.commands.registerCommand('acuarelsync.sync3', fileURLToPath => {
             buscarConfiguracion();
             sincronizarLocal(fileURLToPath, configuracion.dest3);
         });
 
-
+        /* Comprueba si existe el archivo de configuracion y si no existe crea uno con valores vacios */ 
         let crearConfiguracion = vscode.commands.registerCommand('acuarelsync.configuration', fileURLToPath => {
 
             vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
@@ -74,23 +75,20 @@ export function activate(context: vscode.ExtensionContext) {
                     });
                 });
             } catch (err) {
-                //console.log("Error: " + err);
-
-
                 fse
                     .outputJson(
                         configPath,
                         {
                             _comment: "Dest1 y Dest2 Funcionan para sincronizar con dos distintos servidores, Dest3 funciona para sincronizar el local con el remoto",
-                            _comment2: "ACORDARSE DE BORRAR LOS VALORES POR DEFECTO A VACIOS!!!!!",
+                            _comment2: "Utiliza un acceso SSH",
                             dest1: {
-                                destino: "/mnt/c/Users/Ordenador/Documents/ParaCopia",
-                                parametros: "-R -arvz",
+                                destino: "",
+                                parametros: "",
                                 ignore: [],
                             },
                             dest2: {
-                                destino: "/mnt/c/Users/Ordenador/Documents/ParaCopia2",
-                                parametros: "-R -arvz",
+                                destino: "",
+                                parametros: "",
                                 ignore: [],
                             },
                             dest3: {
@@ -116,9 +114,8 @@ export function activate(context: vscode.ExtensionContext) {
     }
 }
 
+/* Busqueda del archivo de configuracion en el directorio del workspace */
 function buscarConfiguracion() {
-    /* BUSQUEDA DEL ARCHIVO DE CONFIGURACION EN EL DIRECTORIO DEL WORKSPACE */
-
     let fileContent = "";
 
     try {
@@ -133,14 +130,10 @@ function buscarConfiguracion() {
     }
 }
 
+/* Sincronizar los archivos del servidor con los archivos locales */
 function sincronizarServidor(fileURLToPath: any, config: any) {
-    // The code you place here will be executed every time your command is executed
-    // Display a message box to the user
-
     try {
-        console.log("Ejecutando");
-
-        //console.log(fileURLToPath);        
+        console.log("Ejecutando");    
 
         var vscode = require("vscode");
         var f = basepath;
@@ -148,12 +141,8 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
 
         let auxiliar = Promise.resolve(fileURLToPath);
         Promise.all([auxiliar]).then(values => {
-            //console.log(values);
-
-            //vscode.window.showInformationMessage(values[0]._fsPath);
 
             var nombre = values[0]._fsPath.split("\\");
-            //console.log(nombre);
 
             /* Definido con un array en 'configuracion.json'*/
             var listaIgnorar = config.ignore;
@@ -166,7 +155,6 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
 
             terminal.show();
             if (nombre.length === fArray.length) {
-                /* wsl rsync -R -arvz --exclude={'',''} .(Origen) /mnt/c/Users/Ordenador/Documents/ParaCopia(Destino) */
                 terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + ". " + config.destino);
             } else {
                 if (nombre.length === (fArray.length + 1)) {
@@ -194,14 +182,10 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
     }
 }
 
+/* Sincronizar los archivos locales con los del servidor */
 function sincronizarLocal(fileURLToPath: any, config: any) {
-    // The code you place here will be executed every time your command is executed
-    // Display a message box to the user
-
     try {
-        console.log("Ejecutando");
-
-        //console.log(fileURLToPath);        
+        console.log("Ejecutando");      
 
         var vscode = require("vscode");
         var f = basepath;
@@ -209,12 +193,8 @@ function sincronizarLocal(fileURLToPath: any, config: any) {
 
         let auxiliar = Promise.resolve(fileURLToPath);
         Promise.all([auxiliar]).then(values => {
-            //console.log(values);
-
-            //vscode.window.showInformationMessage(values[0]._fsPath);
 
             var nombre = values[0]._fsPath.split("\\");
-            //console.log(nombre);
 
             /* Definido con un array en 'configuracion.json'*/
             var listaIgnorar = config.ignore;
@@ -227,7 +207,6 @@ function sincronizarLocal(fileURLToPath: any, config: any) {
 
             terminal.show();
             if (nombre.length === fArray.length) {
-                /* wsl rsync -R -arvz --exclude={'',''} .(Origen) /mnt/c/Users/Ordenador/Documents/ParaCopia(Destino) */
                 terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + config.remoto + " .");
             } else {
                 if (nombre.length === (fArray.length + 1)) {
