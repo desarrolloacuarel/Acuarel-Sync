@@ -79,21 +79,21 @@ export function activate(context: vscode.ExtensionContext) {
                     .outputJson(
                         configPath,
                         {
-                            _comment: "Dest1 y Dest2 Funcionan para sincronizar con dos distintos servidores, Dest3 funciona para sincronizar el local con el remoto",
-                            _comment2: "Utiliza un acceso SSH",
+                            _comment: "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
+                            _comment2: "Uses SSH access",
                             dest1: {
-                                destino: "",
-                                parametros: "",
+                                destination: "",
+                                parameters: "",
                                 ignore: [],
                             },
                             dest2: {
-                                destino: "",
-                                parametros: "",
+                                destination: "",
+                                parameters: "",
                                 ignore: [],
                             },
                             dest3: {
-                                remoto: "",
-                                parametros: "",
+                                remote: "",
+                                parameters: "",
                                 ignore: [],
                             }
                         },
@@ -155,10 +155,10 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
 
             terminal.show();
             if (nombre.length === fArray.length) {
-                terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + ". " + config.destino);
+                terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + ". " + config.destination);
             } else {
                 if (nombre.length === (fArray.length + 1)) {
-                    terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destino);
+                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destination);
                 }
 
                 /* Para subarchivos */
@@ -172,7 +172,7 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
                         }
                     }
 
-                    terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + "'" + direccion + "' " + config.destino + "/");
+                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + direccion + "' " + config.destination + "/");
                 }
             }
         });
@@ -207,10 +207,10 @@ function sincronizarLocal(fileURLToPath: any, config: any) {
 
             terminal.show();
             if (nombre.length === fArray.length) {
-                terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + config.remoto + " .");
+                terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + config.remote + " .");
             } else {
                 if (nombre.length === (fArray.length + 1)) {
-                    terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + config.remoto + " '" + nombre[(nombre.length - 1)] + "'");
+                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + config.remote + " '" + nombre[(nombre.length - 1)] + "'");
                 }
 
                 /* Para subarchivos */
@@ -224,7 +224,7 @@ function sincronizarLocal(fileURLToPath: any, config: any) {
                         }
                     }
 
-                    terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + config.remoto + "/" + " '" + direccion + "'");
+                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + config.remote + "/" + " '" + direccion + "'");
                 }
             }
         });
