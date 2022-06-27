@@ -1,7 +1,6 @@
 # Acuarel-sync README
 
-This is the README for your extension "Acuarel-Rsync". After writing up a brief description, we recommend including the following sections.
-
+This is the README for the extension "Acuarel-Rsync".
 ## Features
 
 This extension allows to create a configuration file that contains the information to access 2 servers for sending files and 1 server access to bring the files from the server to local. All of this options are located in the context menu of the explorer.

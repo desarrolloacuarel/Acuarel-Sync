@@ -3,6 +3,7 @@
     "displayName": "",
     "description": "",
     "version": "0.0.1",
+    "publisher": "Acuarel",
     "engines": {
         "vscode": "^1.67.0"
     },
