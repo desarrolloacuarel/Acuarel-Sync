@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as fse from 'fs-extra';
-import { Console } from 'console';
+import { fileURLToPath } from 'url';
 
 'use strict';
 
@@ -14,9 +14,7 @@ console.log(basepath);
 
 const fs = require('fs');
 
-let configuracion: {
-    ignore: any; destino: string;
-};
+var configuracion: any;
 
 
 const terminal = vscode.window.createTerminal();
@@ -37,82 +35,19 @@ export function activate(context: vscode.ExtensionContext) {
          */
 
 
-        let sincronizar = vscode.commands.registerCommand('acuarelsync.sync1', fileURLToPath => {
-            // The code you place here will be executed every time your command is executed
-            // Display a message box to the user
+        let sincronizar1 = vscode.commands.registerCommand('acuarelsync.sync1', fileURLToPath => {
+            buscarConfiguracion();
+            sincronizarServidor(fileURLToPath, configuracion.dest1);
+        });
 
+        let sincronizar2 = vscode.commands.registerCommand('acuarelsync.sync2', fileURLToPath => {
+            buscarConfiguracion();
+            sincronizarServidor(fileURLToPath, configuracion.dest2);
+        });
 
-            /* BUSQUEDA DEL ARCHIVO DE CONFIGURACION EN EL DIRECTORIO DEL WORKSPACE */
-
-            let fileContent = "";
-
-            try {
-                const data = fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
-                fileContent = data.toString();
-                console.log(fileContent);
-
-                configuracion = JSON.parse(fileContent);
-            } catch (err) {
-                console.error(err);
-                console.log("Se ha producido un error al buscar el archivo de configuracion");
-            }
-
-            try {
-                console.log("Ejecutando");
-
-                //console.log(fileURLToPath);        
-
-                var vscode = require("vscode");
-                var f = basepath;
-                var fArray = f.split("\\");
-
-                var auxiliar = Promise.resolve(fileURLToPath);
-                Promise.all([auxiliar]).then(values => {
-                    //console.log(values);
-
-                    //vscode.window.showInformationMessage(values[0]._fsPath);
-
-                    var nombre = values[0]._fsPath.split("\\");
-                    //console.log(nombre);
-
-                    /* Definido con un array en 'configuracion.json'*/
-                    var listaIgnorar = configuracion.ignore;
-                    var comandoIgnorar = "";
-                    if (listaIgnorar.length > 0) {
-                        for (let index = 0; index < listaIgnorar.length; index++) {
-                            comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
-                        }
-                    }
-
-                    terminal.show();
-                    if (nombre.length === fArray.length) {
-                        /* wsl rsync -R -arvz --exclude={'',''} .(Origen) /mnt/c/Users/Ordenador/Documents/ParaCopia(Destino) */
-                        terminal.sendText("wsl rsync -R -arvz " + comandoIgnorar + ". " + configuracion.destino);
-                    } else {
-                        if (nombre.length === (fArray.length + 1)) {
-                            terminal.sendText("wsl rsync -R -arvz " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + configuracion.destino);
-                        }
-
-                        /* Para subarchivos */
-
-                        if (nombre.length > (fArray.length + 1)) {
-                            var direccion = "";
-                            for (let index = fArray.length; index < nombre.length; index++) {
-                                direccion += nombre[index];
-                                if (index != (nombre.length - 1)) {
-                                    direccion += "/";
-                                }
-                            }
-
-                            terminal.sendText("wsl rsync -R -arvz " + comandoIgnorar + "'" + direccion + "' " + configuracion.destino + "/");
-                        }
-                    }
-                });
-
-            } catch (err) {
-                vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
-            }
-
+        let sincronizar3 = vscode.commands.registerCommand('acuarelsync.sync3', fileURLToPath => {
+            buscarConfiguracion();
+            sincronizarLocal(fileURLToPath, configuracion.dest3);
         });
 
 
@@ -146,8 +81,23 @@ export function activate(context: vscode.ExtensionContext) {
                     .outputJson(
                         configPath,
                         {
-                            destino: "",
-                            ignore: [],
+                            _comment: "Dest1 y Dest2 Funcionan para sincronizar con dos distintos servidores, Dest3 funciona para sincronizar el local con el remoto",
+                            _comment2: "ACORDARSE DE BORRAR LOS VALORES POR DEFECTO A VACIOS!!!!!",
+                            dest1: {
+                                destino: "/mnt/c/Users/Ordenador/Documents/ParaCopia",
+                                parametros: "-R -arvz",
+                                ignore: [],
+                            },
+                            dest2: {
+                                destino: "/mnt/c/Users/Ordenador/Documents/ParaCopia2",
+                                parametros: "-R -arvz",
+                                ignore: [],
+                            },
+                            dest3: {
+                                remoto: "",
+                                parametros: "",
+                                ignore: [],
+                            }
                         },
                         { spaces: 4 }
                     )
@@ -156,7 +106,9 @@ export function activate(context: vscode.ExtensionContext) {
         });
 
 
-        context.subscriptions.push(sincronizar);
+        context.subscriptions.push(sincronizar1);
+        context.subscriptions.push(sincronizar2);
+        context.subscriptions.push(sincronizar3);
         context.subscriptions.push(crearConfiguracion);
 
     } catch (err) {
@@ -164,9 +116,149 @@ export function activate(context: vscode.ExtensionContext) {
     }
 }
 
+function buscarConfiguracion() {
+    /* BUSQUEDA DEL ARCHIVO DE CONFIGURACION EN EL DIRECTORIO DEL WORKSPACE */
+
+    let fileContent = "";
+
+    try {
+        const data = fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
+        fileContent = data.toString();
+        console.log(fileContent);
+
+        configuracion = JSON.parse(fileContent);
+    } catch (err) {
+        console.error(err);
+        console.log("Se ha producido un error al buscar el archivo de configuracion");
+    }
+}
+
+function sincronizarServidor(fileURLToPath: any, config: any) {
+    // The code you place here will be executed every time your command is executed
+    // Display a message box to the user
+
+    try {
+        console.log("Ejecutando");
+
+        //console.log(fileURLToPath);        
+
+        var vscode = require("vscode");
+        var f = basepath;
+        var fArray = f.split("\\");
+
+        let auxiliar = Promise.resolve(fileURLToPath);
+        Promise.all([auxiliar]).then(values => {
+            //console.log(values);
+
+            //vscode.window.showInformationMessage(values[0]._fsPath);
+
+            var nombre = values[0]._fsPath.split("\\");
+            //console.log(nombre);
+
+            /* Definido con un array en 'configuracion.json'*/
+            var listaIgnorar = config.ignore;
+            var comandoIgnorar = "";
+            if (listaIgnorar.length > 0) {
+                for (let index = 0; index < listaIgnorar.length; index++) {
+                    comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
+                }
+            }
+
+            terminal.show();
+            if (nombre.length === fArray.length) {
+                /* wsl rsync -R -arvz --exclude={'',''} .(Origen) /mnt/c/Users/Ordenador/Documents/ParaCopia(Destino) */
+                terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + ". " + config.destino);
+            } else {
+                if (nombre.length === (fArray.length + 1)) {
+                    terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destino);
+                }
+
+                /* Para subarchivos */
+
+                if (nombre.length > (fArray.length + 1)) {
+                    var direccion = "";
+                    for (let index = fArray.length; index < nombre.length; index++) {
+                        direccion += nombre[index];
+                        if (index != (nombre.length - 1)) {
+                            direccion += "/";
+                        }
+                    }
+
+                    terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + "'" + direccion + "' " + config.destino + "/");
+                }
+            }
+        });
+
+    } catch (err) {
+        vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
+    }
+}
+
+function sincronizarLocal(fileURLToPath: any, config: any) {
+    // The code you place here will be executed every time your command is executed
+    // Display a message box to the user
+
+    try {
+        console.log("Ejecutando");
+
+        //console.log(fileURLToPath);        
+
+        var vscode = require("vscode");
+        var f = basepath;
+        var fArray = f.split("\\");
+
+        let auxiliar = Promise.resolve(fileURLToPath);
+        Promise.all([auxiliar]).then(values => {
+            //console.log(values);
+
+            //vscode.window.showInformationMessage(values[0]._fsPath);
+
+            var nombre = values[0]._fsPath.split("\\");
+            //console.log(nombre);
+
+            /* Definido con un array en 'configuracion.json'*/
+            var listaIgnorar = config.ignore;
+            var comandoIgnorar = "";
+            if (listaIgnorar.length > 0) {
+                for (let index = 0; index < listaIgnorar.length; index++) {
+                    comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
+                }
+            }
+
+            terminal.show();
+            if (nombre.length === fArray.length) {
+                /* wsl rsync -R -arvz --exclude={'',''} .(Origen) /mnt/c/Users/Ordenador/Documents/ParaCopia(Destino) */
+                terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + config.remoto + " .");
+            } else {
+                if (nombre.length === (fArray.length + 1)) {
+                    terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + config.remoto + " '" + nombre[(nombre.length - 1)] + "'");
+                }
+
+                /* Para subarchivos */
+
+                if (nombre.length > (fArray.length + 1)) {
+                    var direccion = "";
+                    for (let index = fArray.length; index < nombre.length; index++) {
+                        direccion += nombre[index];
+                        if (index != (nombre.length - 1)) {
+                            direccion += "/";
+                        }
+                    }
+
+                    terminal.sendText("wsl rsync " + config.parametros + " " + comandoIgnorar + config.remoto + "/" + " '" + direccion + "'");
+                }
+            }
+        });
+
+    } catch (err) {
+        vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
+    }
+}
+
 export function showTextDocument(uri: vscode.Uri, option?: vscode.TextDocumentShowOptions) {
     return vscode.window.showTextDocument(uri, option);
 }
+
 
 // this method is called when your extension is deactivated
 export function deactivate() { }

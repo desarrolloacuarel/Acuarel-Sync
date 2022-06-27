@@ -10,7 +10,9 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:acuarelsync.sync",
+        "onCommand:acuarelsync.sync1",
+        "onCommand:acuarelsync.sync2",
+        "onCommand:acuarelsync.sync3",
         "onCommand:acuarelsync.configuration"
     ],
     "main": "./out/extension.js",
@@ -25,15 +27,19 @@
             "Acuarel": [
                 {
                     "command": "acuarelsync.sync1",
-                    "group": "acuarel.group"
+                    "group": "acuarel.group@1"
                 },
                 {
                     "command": "acuarelsync.sync2",
-                    "group": "acuarel.group"
+                    "group": "acuarel.group@2"
+                },
+                {
+                    "command": "acuarelsync.sync3",
+                    "group": "acuarel.group@3"
                 },
                 {
                     "command": "acuarelsync.configuration",
-                    "group": "acuarel.group"
+                    "group": "acuarel.group@4"
                 }
             ]
         },
@@ -46,17 +52,22 @@
         "commands": [
             {
                 "command": "acuarelsync.sync1",
-                "title": "Sincronizar Destino 1",
+                "title": "Sincronizar Servidor 1",
+                "group": "acuarel.group"
+            },
+            {
+                "command": "acuarelsync.sync2",
+                "title": "Sincronizar Servidor 2",
+                "group": "acuarel.group"
+            },
+            {
+                "command": "acuarelsync.sync3",
+                "title": "Sincronizar local con el Servidor",
                 "group": "acuarel.group"
             },
             {
                 "command": "acuarelsync.configuration",
                 "title": "Configuracion",
-                "group": "acuarel.group"
-            },
-            {
-                "command": "acuarelsync.sync2",
-                "title": "Sincronizar Destino 2",
                 "group": "acuarel.group"
             }
         ]

@@ -1,4 +1,18 @@
 {
-    "destino": "/mnt/c/Users/Ordenador/Documents/ParaCopia",
-    "ignore": []
+    "_comment": "Dest1 y Dest2 Funcionan para sincronizar con dos distintos servidores, Dest3 funciona para sincronizar el local con el remoto",
+    "dest1":{
+        "destino": "/mnt/c/Users/Ordenador/Documents/ParaCopia",
+        "parametros": "-R -arvz",
+        "ignore": []
+    },
+    "dest2":{
+        "destino": "/mnt/c/Users/Ordenador/Documents/ParaCopia2",
+        "parametros": "-R -arvz",
+        "ignore": []
+    },
+    "dest3":{
+        "remoto": "desarrollopruebas@pruebasweb.net:/var/www/vhosts/pruebasweb.net/httpdocs",
+        "parametros": "-R -arvz",
+        "ignore": []
+    }
 }
