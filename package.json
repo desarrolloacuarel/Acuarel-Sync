@@ -2,7 +2,7 @@
 	"name": "acuarelsync",
 	"displayName": "Acuarel Sync",
 	"description": "Extension for synchronization between servers and local finles.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "Acuarel",
 	"engines": {
 		"vscode": "^1.67.0"

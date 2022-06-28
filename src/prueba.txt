@@ -1,1 +1,0 @@
-Documento de prueba. Deberia de poder abrir este documentos dentro de la ejecucion del comando.

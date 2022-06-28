@@ -7,8 +7,10 @@ import * as fse from 'fs-extra';
 
 Object.defineProperty(exports, "__esModule", { value: true });
 
+console.log("vscode");
+console.log();
 let myvscode = require("vscode");
-let basepath = myvscode.workspace.workspaceFolders[0].uri.fsPath;
+const basepath = myvscode.workspace.workspaceFolders[0].uri.fsPath;
 console.log(basepath);
 
 const fs = require('fs');
@@ -56,10 +58,10 @@ export function activate(context: vscode.ExtensionContext) {
 
             vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
 
-            var configPath = basepath + '.vscode/.acuarelsync/configuracion.json';
+            var configPath = basepath + '/.vscode/.acuarelsync/configuracion.json';
 
             try {
-                fs.readFileSync(basepath + '.vscode/.acuarelsync/configuracion.json');
+                fs.readFileSync(basepath + '/.vscode/.acuarelsync/configuracion.json');
 
                 vscode.window.showInformationMessage("Ya existe un archivo de configuración en este directorio, se mostrará en pantalla");
 
@@ -119,7 +121,7 @@ function buscarConfiguracion() {
     let fileContent = "";
 
     try {
-        const data = fs.readFileSync(basepath + '.vscode/.acuarelsync/configuracion.json');
+        const data = fs.readFileSync(basepath + '/.vscode/.acuarelsync/configuracion.json');
         fileContent = data.toString();
         console.log(fileContent);
 
@@ -135,18 +137,16 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
     try {
         console.log("Ejecutando");    
 
-        var vscode = require("vscode");
-        var f = basepath;
-        var fArray = f.split("\\");
+        const fArray = basepath.split("\\");
 
         let auxiliar = Promise.resolve(fileURLToPath);
         Promise.all([auxiliar]).then(values => {
 
-            var nombre = values[0]._fsPath.split("\\");
+            let nombre = values[0]._fsPath.split("\\");
 
             /* Definido con un array en 'configuracion.json'*/
-            var listaIgnorar = config.ignore;
-            var comandoIgnorar = "";
+            const listaIgnorar = config.ignore;
+            let comandoIgnorar = "";
             if (listaIgnorar.length > 0) {
                 for (let index = 0; index < listaIgnorar.length; index++) {
                     comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
@@ -164,10 +164,10 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
                 /* Para subarchivos */
 
                 if (nombre.length > (fArray.length + 1)) {
-                    var direccion = "";
+                    let direccion = "";
                     for (let index = fArray.length; index < nombre.length; index++) {
                         direccion += nombre[index];
-                        if (index != (nombre.length - 1)) {
+                        if (index !== (nombre.length - 1)) {
                             direccion += "/";
                         }
                     }
@@ -186,19 +186,17 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
 function sincronizarLocal(fileURLToPath: any, config: any) {
     try {
         console.log("Ejecutando");      
-
-        var vscode = require("vscode");
-        var f = basepath;
-        var fArray = f.split("\\");
+        
+        const fArray = basepath.split("\\");
 
         let auxiliar = Promise.resolve(fileURLToPath);
         Promise.all([auxiliar]).then(values => {
 
-            var nombre = values[0]._fsPath.split("\\");
+            let nombre = values[0]._fsPath.split("\\");
 
             /* Definido con un array en 'configuracion.json'*/
-            var listaIgnorar = config.ignore;
-            var comandoIgnorar = "";
+            const listaIgnorar = config.ignore;
+            let comandoIgnorar = "";
             if (listaIgnorar.length > 0) {
                 for (let index = 0; index < listaIgnorar.length; index++) {
                     comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
@@ -216,10 +214,10 @@ function sincronizarLocal(fileURLToPath: any, config: any) {
                 /* Para subarchivos */
 
                 if (nombre.length > (fArray.length + 1)) {
-                    var direccion = "";
+                    let direccion = "";
                     for (let index = fArray.length; index < nombre.length; index++) {
                         direccion += nombre[index];
-                        if (index != (nombre.length - 1)) {
+                        if (index !== (nombre.length - 1)) {
                             direccion += "/";
                         }
                     }
