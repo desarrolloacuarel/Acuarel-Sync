@@ -151,12 +151,12 @@ const buscarConfiguracion = ()=> {
 };
 
 /* Sincronizar los archivos del servidor con los archivos locales */
-const sincronizarServidor = (fileURLToPath: any, config: any)=> {
+const sincronizarServidor = (urlRecibida: any, config: any)=> {
     try {
         console.log("Ejecutando");
+		console.log({urlRecibida});
 
         const fArray = basepath.split('/');
-		console.log(fileURLToPath);
 		// const mmiPromesa = new Promise( (resolve, reject) => {
 		// 	if(1){
 		// 		resolve(1); // retardo
@@ -165,44 +165,46 @@ const sincronizarServidor = (fileURLToPath: any, config: any)=> {
 		// 	}
 		// });
 
-        //const auxiliar = Promise.resolve(fileURLToPath);
-		console.log(fileURLToPath);
+        //const auxiliar = Promise.resolve(urlRecibida);
+		console.log(urlRecibida);
         //Promise.all([auxiliar]).then( values => {
-		console.log(fileURLToPath.fsPath);
+		console.log(urlRecibida.fsPath);
 
-		let nombre = fileURLToPath.fsPath;
+		let nombre = urlRecibida.fsPath;
 
 		/* Definido con un array en 'configuracion.json'*/
 		const listaIgnorar = config.ignore;
 		let comandoIgnorar = "";
 		if (listaIgnorar.length > 0) {
 			for (let index = 0; index < listaIgnorar.length; index++) {
-				comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
+				comandoIgnorar += `--exclude ${listaIgnorar[index]}`;
 			}
 		}
 
+		// Comprobar si terminal abierto!!!!??
 		terminal.show();
-		if (nombre.length === fArray.length) {
-			terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + ". " + config.destination);
-		} else {
-			if (nombre.length === (fArray.length + 1)) {
-				terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destination);
-			}
+		terminal.sendText(`rsync ${config.parameters} ${comandoIgnorar} ${urlRecibida.fsPath} ${config.destination}`);
+		// if (nombre.length === fArray.length) {
+		// 	terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + ". " + config.destination);
+		// } else {
+		// 	if (nombre.length === (fArray.length + 1)) {
+		// 		terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destination);
+		// 	}
 
-			/* Para subarchivos */
+		// 	/* Para subarchivos */
 
-			if (nombre.length > (fArray.length + 1)) {
-				let direccion = "";
-				for (let index = fArray.length; index < nombre.length; index++) {
-					direccion += nombre[index];
-					if (index !== (nombre.length - 1)) {
-						direccion += "/";
-					}
-				}
+		// 	if (nombre.length > (fArray.length + 1)) {
+		// 		let direccion = "";
+		// 		for (let index = fArray.length; index < nombre.length; index++) {
+		// 			direccion += nombre[index];
+		// 			if (index !== (nombre.length - 1)) {
+		// 				direccion += "/";
+		// 			}
+		// 		}
 
-				terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + direccion + "' " + config.destination + "/");
-			}
-		}
+		// 		terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + direccion + "' " + config.destination + "/");
+		// 	}
+		// }
        //});
 
     } catch (err) {
