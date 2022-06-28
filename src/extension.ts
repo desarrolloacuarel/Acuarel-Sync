@@ -15,7 +15,13 @@ console.log(basepath);
 
 const fs = require('fs');
 
-var configuracion: any;
+let configuracion: any;
+
+const isWin = process.platform;
+let textoIsWin = "";
+if(isWin === 'win32'){
+    textoIsWin = "wsl ";
+}
 
 
 const terminal = vscode.window.createTerminal();
@@ -58,10 +64,10 @@ export function activate(context: vscode.ExtensionContext) {
 
             vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
 
-            var configPath = basepath + '/.vscode/.acuarelsync/configuracion.json';
+            var configPath = basepath + '/.vscode/acuarelsync.json';
 
             try {
-                fs.readFileSync(basepath + '/.vscode/.acuarelsync/configuracion.json');
+                fs.readFileSync(basepath + '/.vscode/acuarelsync.json');
 
                 vscode.window.showInformationMessage("Ya existe un archivo de configuración en este directorio, se mostrará en pantalla");
 
@@ -121,7 +127,7 @@ function buscarConfiguracion() {
     let fileContent = "";
 
     try {
-        const data = fs.readFileSync(basepath + '/.vscode/.acuarelsync/configuracion.json');
+        const data = fs.readFileSync(basepath + '/.vscode/acuarelsync.json');
         fileContent = data.toString();
         console.log(fileContent);
 
@@ -151,14 +157,14 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
                 for (let index = 0; index < listaIgnorar.length; index++) {
                     comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
                 }
-            }
+            }          
 
             terminal.show();
             if (nombre.length === fArray.length) {
-                terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + ". " + config.destination);
+                terminal.sendText(textoIsWin + "rsync " + config.parameters + " " + comandoIgnorar + ". " + config.destination);
             } else {
                 if (nombre.length === (fArray.length + 1)) {
-                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destination);
+                    terminal.sendText(textoIsWin + "rsync " + config.parameters + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destination);
                 }
 
                 /* Para subarchivos */
@@ -172,7 +178,7 @@ function sincronizarServidor(fileURLToPath: any, config: any) {
                         }
                     }
 
-                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + direccion + "' " + config.destination + "/");
+                    terminal.sendText(textoIsWin + "rsync " + config.parameters + " " + comandoIgnorar + "'" + direccion + "' " + config.destination + "/");
                 }
             }
         });
@@ -201,14 +207,14 @@ function sincronizarLocal(fileURLToPath: any, config: any) {
                 for (let index = 0; index < listaIgnorar.length; index++) {
                     comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
                 }
-            }
+            }        
 
             terminal.show();
             if (nombre.length === fArray.length) {
-                terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + config.remote + " .");
+                terminal.sendText(textoIsWin + "rsync " + config.parameters + " " + comandoIgnorar + config.remote + " .");
             } else {
                 if (nombre.length === (fArray.length + 1)) {
-                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + config.remote + " '" + nombre[(nombre.length - 1)] + "'");
+                    terminal.sendText(textoIsWin + "rsync " + config.parameters + " " + comandoIgnorar + config.remote + " '" + nombre[(nombre.length - 1)] + "'");
                 }
 
                 /* Para subarchivos */
@@ -222,7 +228,7 @@ function sincronizarLocal(fileURLToPath: any, config: any) {
                         }
                     }
 
-                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + config.remote + "/" + " '" + direccion + "'");
+                    terminal.sendText(textoIsWin + "rsync " + config.parameters + " " + comandoIgnorar + config.remote + "/" + " '" + direccion + "'");
                 }
             }
         });
