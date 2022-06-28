@@ -23,3 +23,7 @@ Users appreciate release notes as you update your extension.
 ### 1.0.0
 
 Initial release of Acuarel Sync
+
+### 1.1.0
+
+Autodetection of SO (In case of windows adds wsl else not)
