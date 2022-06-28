@@ -15,18 +15,16 @@ console.log(basepath);
 
 const fs = require('fs');
 
-var configuracion: any;
+
 
 
 const terminal = vscode.window.createTerminal();
 // this method is called when your extension is activated. your extension is activated the very first time the command is executed
 
-export function activate(context: vscode.ExtensionContext) {
+const activate = (context: vscode.ExtensionContext)=> {
+
 
     try {
-        // Use the console to output diagnostic information (console.log) and errors (console.error)
-        // This line of code will only be executed once when your extension is activated
-        console.log('Congratulations, your extension "Acuarel Sync" is now active!');
 
 
         /**
@@ -36,29 +34,36 @@ export function activate(context: vscode.ExtensionContext) {
          */
 
 
+		const sincronizar = ( path:any, valor:any )=>{
+
+			const configuracion = buscarConfiguracion( );
+
+			switch(valor){
+				case 1: sincronizarServidor(path, configuracion.dest1);break;
+				case 2: sincronizarServidor(path, configuracion.dest2);break;
+				case 3: sincronizarLocal(path, configuracion.dest3);
+			}
+		};
+
         /* Sincronizar1 y Sincronizar2 sincronizan el servidor con los archivos locales*/
-        let sincronizar1 = vscode.commands.registerCommand('acuarelsync.sync1', fileURLToPath => {
-            buscarConfiguracion();
-            sincronizarServidor(fileURLToPath, configuracion.dest1);
+        const sincronizar1 = vscode.commands.registerCommand('acuarelsync.sync1', path => {
+            sincronizar(path, 1);
         });
 
-        let sincronizar2 = vscode.commands.registerCommand('acuarelsync.sync2', fileURLToPath => {
-            buscarConfiguracion();
-            sincronizarServidor(fileURLToPath, configuracion.dest2);
+        const sincronizar2 = vscode.commands.registerCommand('acuarelsync.sync2', path => {
+            sincronizar(path, 2);
         });
 
-        /* Sincronizar3 sincroniza el local con los archivos del servidor*/ 
-        let sincronizar3 = vscode.commands.registerCommand('acuarelsync.sync3', fileURLToPath => {
-            buscarConfiguracion();
-            sincronizarLocal(fileURLToPath, configuracion.dest3);
+        /* Sincronizar3 sincroniza el local con los archivos del servidor*/
+        const sincronizar3 = vscode.commands.registerCommand('acuarelsync.sync3', path => {
+            sincronizar(path, 3);
         });
 
-        /* Comprueba si existe el archivo de configuracion y si no existe crea uno con valores vacios */ 
-        let crearConfiguracion = vscode.commands.registerCommand('acuarelsync.configuration', fileURLToPath => {
+		const creaConfig = ()=>{
 
-            vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
+			vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
 
-            var configPath = basepath + '/.vscode/.acuarelsync/configuracion.json';
+            const configPath = basepath + '/.vscode/.acuarelsync/configuracion.json';
 
             try {
                 fs.readFileSync(basepath + '/.vscode/.acuarelsync/configuracion.json');
@@ -72,7 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
                         // Line added - by having a selection at the same position twice, the cursor jumps there
                         editor.selections = [new vscode.Selection(pos1, pos1)];
                         // And the visible range jumps there too
-                        var range = new vscode.Range(pos1, pos1);
+                        const range = new vscode.Range(pos1, pos1);
                         editor.revealRange(range);
                     });
                 });
@@ -103,7 +108,10 @@ export function activate(context: vscode.ExtensionContext) {
                     )
                     .then(() => showTextDocument(vscode.Uri.file(configPath)));
             }
-        });
+		};
+
+        /* Comprueba si existe el archivo de configuracion y si no existe crea uno con valores vacios */
+        const crearConfiguracion = vscode.commands.registerCommand('acuarelsync.configuration', creaConfig);
 
 
         context.subscriptions.push(sincronizar1);
@@ -111,82 +119,104 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(sincronizar3);
         context.subscriptions.push(crearConfiguracion);
 
+		// Use the console to output diagnostic information (console.log) and errors (console.error)
+        // This line of code will only be executed once when your extension is activated
+        console.log('Congratulations, your extension "Acuarel Sync" is now active!');
+
+
+		// en activacion de vscode, lanzamos chamada  metodo activate mediante  "onStartupFinished"
+		creaConfig();
+
+
     } catch (err) {
         console.log(err);
     }
-}
+};
 
 /* Busqueda del archivo de configuracion en el directorio del workspace */
-function buscarConfiguracion() {
+const buscarConfiguracion = ()=> {
     let fileContent = "";
 
     try {
         const data = fs.readFileSync(basepath + '/.vscode/.acuarelsync/configuracion.json');
         fileContent = data.toString();
-        console.log(fileContent);
+        //console.log(fileContent);
 
-        configuracion = JSON.parse(fileContent);
+        return JSON.parse(fileContent); // return configuracion;
+
     } catch (err) {
         console.error(err);
         console.log("Se ha producido un error al buscar el archivo de configuracion");
     }
-}
+};
 
 /* Sincronizar los archivos del servidor con los archivos locales */
-function sincronizarServidor(fileURLToPath: any, config: any) {
+const sincronizarServidor = (fileURLToPath: any, config: any)=> {
     try {
-        console.log("Ejecutando");    
+        console.log("Ejecutando");
 
-        const fArray = basepath.split("\\");
+        const fArray = basepath.split('/');
+		console.log(fileURLToPath);
+		// const mmiPromesa = new Promise( (resolve, reject) => {
+		// 	if(1){
+		// 		resolve(1); // retardo
+		// 	}else{
+		// 		reject(`Error`);
+		// 	}
+		// });
 
-        let auxiliar = Promise.resolve(fileURLToPath);
-        Promise.all([auxiliar]).then(values => {
+        //const auxiliar = Promise.resolve(fileURLToPath);
+		console.log(fileURLToPath);
+        //Promise.all([auxiliar]).then( values => {
+		console.log(fileURLToPath.fsPath);
 
-            let nombre = values[0]._fsPath.split("\\");
+		let nombre = fileURLToPath.fsPath;
 
-            /* Definido con un array en 'configuracion.json'*/
-            const listaIgnorar = config.ignore;
-            let comandoIgnorar = "";
-            if (listaIgnorar.length > 0) {
-                for (let index = 0; index < listaIgnorar.length; index++) {
-                    comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
-                }
-            }
+		/* Definido con un array en 'configuracion.json'*/
+		const listaIgnorar = config.ignore;
+		let comandoIgnorar = "";
+		if (listaIgnorar.length > 0) {
+			for (let index = 0; index < listaIgnorar.length; index++) {
+				comandoIgnorar += "--exclude '" + listaIgnorar[index] + "' ";
+			}
+		}
 
-            terminal.show();
-            if (nombre.length === fArray.length) {
-                terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + ". " + config.destination);
-            } else {
-                if (nombre.length === (fArray.length + 1)) {
-                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destination);
-                }
+		terminal.show();
+		if (nombre.length === fArray.length) {
+			terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + ". " + config.destination);
+		} else {
+			if (nombre.length === (fArray.length + 1)) {
+				terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + nombre[(nombre.length - 1)] + "' " + config.destination);
+			}
 
-                /* Para subarchivos */
+			/* Para subarchivos */
 
-                if (nombre.length > (fArray.length + 1)) {
-                    let direccion = "";
-                    for (let index = fArray.length; index < nombre.length; index++) {
-                        direccion += nombre[index];
-                        if (index !== (nombre.length - 1)) {
-                            direccion += "/";
-                        }
-                    }
+			if (nombre.length > (fArray.length + 1)) {
+				let direccion = "";
+				for (let index = fArray.length; index < nombre.length; index++) {
+					direccion += nombre[index];
+					if (index !== (nombre.length - 1)) {
+						direccion += "/";
+					}
+				}
 
-                    terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + direccion + "' " + config.destination + "/");
-                }
-            }
-        });
+				terminal.sendText("wsl rsync " + config.parameters + " " + comandoIgnorar + "'" + direccion + "' " + config.destination + "/");
+			}
+		}
+       //});
 
     } catch (err) {
+		console.log(err);
+
         vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
     }
-}
+};
 
 /* Sincronizar los archivos locales con los del servidor */
-function sincronizarLocal(fileURLToPath: any, config: any) {
+const sincronizarLocal = (fileURLToPath: any, config: any) =>{
     try {
-        console.log("Ejecutando");      
-        
+        console.log("Ejecutando");
+
         const fArray = basepath.split("\\");
 
         let auxiliar = Promise.resolve(fileURLToPath);
@@ -230,12 +260,20 @@ function sincronizarLocal(fileURLToPath: any, config: any) {
     } catch (err) {
         vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
     }
-}
+};
 
-export function showTextDocument(uri: vscode.Uri, option?: vscode.TextDocumentShowOptions) {
+const showTextDocument = (uri: vscode.Uri, option?: vscode.TextDocumentShowOptions) => {
     return vscode.window.showTextDocument(uri, option);
-}
+};
 
 
 // this method is called when your extension is deactivated
-export function deactivate() { }
+const deactivate = ()=> {};
+
+
+export{
+	activate,
+	deactivate,
+	showTextDocument
+
+};

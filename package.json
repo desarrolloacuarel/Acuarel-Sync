@@ -19,9 +19,11 @@
 		"onCommand:acuarelsync.sync1",
 		"onCommand:acuarelsync.sync2",
 		"onCommand:acuarelsync.sync3",
-		"onCommand:acuarelsync.configuration"
+		"onStartupFinished"
 	],
+
 	"main": "./out/extension.js",
+
 	"contributes": {
 		"menus": {
 			"explorer/context": [
@@ -42,11 +44,8 @@
 				{
 					"command": "acuarelsync.sync3",
 					"group": "acuarel.group@3"
-				},
-				{
-					"command": "acuarelsync.configuration",
-					"group": "acuarel.group@4"
 				}
+
 			]
 		},
 		"submenus": [
