@@ -3,17 +3,17 @@
     "_comment2": "Uses SSH access",
     "dest1":{
         "destination": "",
-        "parameters": "-R -arvz",
+        "parameters": "",
         "ignore": []
     },
     "dest2":{
         "destination": "",
-        "parameters": "-R -arvz",
+        "parameters": "",
         "ignore": []
     },
     "dest3":{
         "remote": "",
-        "parameters": "-av",
+        "parameters": "",
         "ignore": []
     }
 }

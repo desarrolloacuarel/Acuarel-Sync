@@ -1,101 +1,112 @@
 {
-    "name": "acuarelsync",
-    "displayName": "",
-    "description": "",
-    "version": "1.0.0",
-    "publisher": "Acuarel",
-    "engines": {
-        "vscode": "^1.67.0"
-    },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:acuarelsync.sync1",
-        "onCommand:acuarelsync.sync2",
-        "onCommand:acuarelsync.sync3",
-        "onCommand:acuarelsync.configuration"
-    ],
-    "main": "./out/extension.js",
-    "contributes": {
-        "menus": {
-            "explorer/context": [
-                {
-                    "submenu": "Acuarel",
-                    "group": "acuarel.group"
-                }
-            ],
-            "Acuarel": [
-                {
-                    "command": "acuarelsync.sync1",
-                    "group": "acuarel.group@1"
-                },
-                {
-                    "command": "acuarelsync.sync2",
-                    "group": "acuarel.group@2"
-                },
-                {
-                    "command": "acuarelsync.sync3",
-                    "group": "acuarel.group@3"
-                },
-                {
-                    "command": "acuarelsync.configuration",
-                    "group": "acuarel.group@4"
-                }
-            ]
-        },
-        "submenus": [{
-            "label": "Acuarel Sync",
-            "id": "Acuarel"
-        }],
-
-
-        "commands": [
-            {
-                "command": "acuarelsync.sync1",
-                "title": "Sincronizar Servidor 1",
-                "group": "acuarel.group"
-            },
-            {
-                "command": "acuarelsync.sync2",
-                "title": "Sincronizar Servidor 2",
-                "group": "acuarel.group"
-            },
-            {
-                "command": "acuarelsync.sync3",
-                "title": "Sincronizar local con el Servidor",
-                "group": "acuarel.group"
-            },
-            {
-                "command": "acuarelsync.configuration",
-                "title": "Configuracion",
-                "group": "acuarel.group"
-            }
-        ]
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile && npm run lint",
-        "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
-    },
-    "devDependencies": {
-        "@types/fs-extra": "^9.0.13",
-        "@types/glob": "^7.2.0",
-        "@types/mocha": "^9.1.1",
-        "@types/node": "^14.18.21",
-        "@types/vscode": "^1.67.0",
-        "@typescript-eslint/eslint-plugin": "^5.21.0",
-        "@typescript-eslint/parser": "^5.21.0",
-        "@vscode/test-electron": "^2.1.3",
-        "eslint": "^8.14.0",
-        "glob": "^8.0.1",
-        "mocha": "^9.2.2",
-        "typescript": "^4.6.4"
-    },
-    "dependencies": {
-        "fs-extra": "^10.1.0"
-    }
+	"name": "acuarelsync",
+	"displayName": "Acuarel Sync",
+	"description": "Extension for synchronization between servers and local finles.",
+	"version": "1.0.0",
+	"publisher": "Acuarel",
+	"engines": {
+		"vscode": "^1.67.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/desarrolloacuarel/ExtensionVC.git"
+	},
+    "icon": "images/logo.png",
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:acuarelsync.sync1",
+		"onCommand:acuarelsync.sync2",
+		"onCommand:acuarelsync.sync3",
+		"onCommand:acuarelsync.configuration"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"menus": {
+			"explorer/context": [
+				{
+					"submenu": "Acuarel",
+					"group": "acuarel.group"
+				}
+			],
+			"Acuarel": [
+				{
+					"command": "acuarelsync.sync1",
+					"group": "acuarel.group@1"
+				},
+				{
+					"command": "acuarelsync.sync2",
+					"group": "acuarel.group@2"
+				},
+				{
+					"command": "acuarelsync.sync3",
+					"group": "acuarel.group@3"
+				},
+				{
+					"command": "acuarelsync.configuration",
+					"group": "acuarel.group@4"
+				}
+			]
+		},
+		"submenus": [
+			{
+				"label": "Acuarel Sync",
+				"id": "Acuarel"
+			}
+		],
+		"commands": [
+			{
+				"command": "acuarelsync.sync1",
+				"title": "Sincronizar Servidor 1",
+				"group": "acuarel.group"
+			},
+			{
+				"command": "acuarelsync.sync2",
+				"title": "Sincronizar Servidor 2",
+				"group": "acuarel.group"
+			},
+			{
+				"command": "acuarelsync.sync3",
+				"title": "Sincronizar local con el Servidor",
+				"group": "acuarel.group"
+			},
+			{
+				"command": "acuarelsync.configuration",
+				"title": "Configuracion",
+				"group": "acuarel.group"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/fs-extra": "^9.0.13",
+		"@types/glob": "^7.2.0",
+		"@types/mocha": "^9.1.1",
+		"@types/node": "^14.18.21",
+		"@types/vscode": "^1.67.0",
+		"@typescript-eslint/eslint-plugin": "^5.21.0",
+		"@typescript-eslint/parser": "^5.21.0",
+		"@vscode/test-electron": "^2.1.3",
+		"eslint": "^8.14.0",
+		"glob": "^8.0.1",
+		"mocha": "^9.2.2",
+		"typescript": "^4.6.4"
+	},
+	"dependencies": {
+		"fs-extra": "^10.1.0"
+	},
+	"__metadata": {
+		"id": "473f1c20-1543-4e4a-82f3-0741209fadfb",
+		"publisherDisplayName": "Acuarel",
+		"publisherId": "b46b463b-d748-4e85-94d5-bbcac4ea5af5",
+		"isPreReleaseVersion": false
+	}
 }

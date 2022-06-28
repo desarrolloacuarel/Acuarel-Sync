@@ -56,10 +56,10 @@ export function activate(context: vscode.ExtensionContext) {
 
             vscode.window.showInformationMessage("Se ha ejecutado el comando de configuration");
 
-            var configPath = basepath + '/.acuarelsync/configuracion.json';
+            var configPath = basepath + '.vscode/.acuarelsync/configuracion.json';
 
             try {
-                fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
+                fs.readFileSync(basepath + '.vscode/.acuarelsync/configuracion.json');
 
                 vscode.window.showInformationMessage("Ya existe un archivo de configuración en este directorio, se mostrará en pantalla");
 
@@ -119,7 +119,7 @@ function buscarConfiguracion() {
     let fileContent = "";
 
     try {
-        const data = fs.readFileSync(basepath + '/.acuarelsync/configuracion.json');
+        const data = fs.readFileSync(basepath + '.vscode/.acuarelsync/configuracion.json');
         fileContent = data.toString();
         console.log(fileContent);
 
