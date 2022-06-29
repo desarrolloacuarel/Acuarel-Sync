@@ -27,6 +27,9 @@ Initial release of Acuarel Sync
 ### 1.1.0
 
 Autodetection of SO (In case of windows adds wsl else not).
+
 Code optimization and upgrades.
+
 Changes in the configuration file.
+
 Labels for each destination for custom notification on each execution.
