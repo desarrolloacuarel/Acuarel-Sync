@@ -9,7 +9,7 @@ Dest1 and Dest2 in the configuration file define the 2 servers to connect for se
 
 ## Requirements
 
-This extension is based on the command rsync for windows using "wsl".
+This extension is based on the command rsync for windows using "wsl" and for linux.
 
 ## Extension Settings
 
@@ -18,7 +18,7 @@ This extension is based on the command rsync for windows using "wsl".
 Only can hold 3 destinations due to the limits of the menu integration.
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+Upgrades and optimization in the code making it work better and either for windows or linux.
 
 ### 1.0.0
 
@@ -26,4 +26,7 @@ Initial release of Acuarel Sync
 
 ### 1.1.0
 
-Autodetection of SO (In case of windows adds wsl else not)
+Autodetection of SO (In case of windows adds wsl else not).
+Code optimization and upgrades.
+Changes in the configuration file.
+Labels for each destination for custom notification on each execution.
