@@ -1,19 +1,24 @@
 {
     "_comment": "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
     "_comment2": "Uses SSH access",
-    "dest1":{
+    "destinations":[
+    {
+        "label": "",
         "destination": "",
         "parameters": "",
         "ignore": []
     },
-    "dest2":{
+    {
+        "label": "",
         "destination": "",
         "parameters": "",
         "ignore": []
     },
-    "dest3":{
+    {
+        "label": "",
         "remote": "",
         "parameters": "",
         "ignore": []
     }
+    ]
 }
