@@ -164,7 +164,7 @@ const sincronizarServidor = (fileURLToPath: any, config: any) => {
 
 		// Comprobar si terminal abierto!!!!??
 		terminal.show();
-		terminal.sendText(textoIsWin+`rsync ${config.parameters} ${comandoIgnorar} `+relativePath+` ${config.destination}`);
+		terminal.sendText(textoIsWin+`rsync ${config.parameters} ${comandoIgnorar} '`+relativePath+`' '${config.destination}'`);
 
     } catch (err) {
         vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
@@ -196,7 +196,7 @@ const sincronizarLocal = (fileURLToPath: any, config: any) => {
 
 		// Comprobar si terminal abierto!!!!??
 		terminal.show();
-		terminal.sendText(textoIsWin+`rsync ${config.parameters} ${comandoIgnorar} ${config.remote} `+relativePath);
+		terminal.sendText(textoIsWin+`rsync ${config.parameters} ${comandoIgnorar} '${config.remote}' '`+relativePath+`'`);
 
     } catch (err) {
         vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
