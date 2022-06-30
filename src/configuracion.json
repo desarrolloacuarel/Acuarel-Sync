@@ -19,6 +19,12 @@
         "remote": "",
         "parameters": "",
         "ignore": []
+    },
+    {
+        "label": "",
+        "host": "pruebasweb.net",
+        "user": "desarrollopruebas",
+        "password": "cs&0493vM"
     }
     ]
 }

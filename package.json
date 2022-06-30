@@ -19,6 +19,7 @@
 		"onCommand:acuarelsync.sync1",
 		"onCommand:acuarelsync.sync2",
 		"onCommand:acuarelsync.sync3",
+		"onCommand:acuarelsync.sync4",
 		"onCommand:acuarelsync.configuration"
 	],
 	"main": "./out/extension.js",
@@ -42,6 +43,10 @@
 				{
 					"command": "acuarelsync.sync3",
 					"group": "acuarel.group@3"
+				},
+                {
+					"command": "acuarelsync.sync4",
+					"group": "acuarel.group@4"
 				},
 				{
 					"command": "acuarelsync.configuration",
@@ -69,6 +74,11 @@
 			{
 				"command": "acuarelsync.sync3",
 				"title": "Sincronizar local con el Servidor",
+				"group": "acuarel.group"
+			},
+            {
+				"command": "acuarelsync.sync4",
+				"title": "Sincronizar SFTP",
 				"group": "acuarel.group"
 			},
 			{

@@ -44,6 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
                 case 1: sincronizarServidor(path, configuracion.destinations[0]);break;
                 case 2: sincronizarServidor(path, configuracion.destinations[1]);break;
                 case 3: sincronizarLocal(path, configuracion.destinations[2]);break;
+                case 4: sincronizarSFTP(path, configuracion.destinations[3]);break;
             }
         };
 
@@ -59,6 +60,11 @@ export function activate(context: vscode.ExtensionContext) {
         /* Sincronizar3 sincroniza el local con los archivos del servidor*/ 
         let sincronizar3 = vscode.commands.registerCommand('acuarelsync.sync3', fileURLToPath => {
             sincronizar(fileURLToPath, 3);
+        });
+        
+        /* Sincronizar4 sincroniza por sftp*/ 
+        let sincronizar4 = vscode.commands.registerCommand('acuarelsync.sync4', fileURLToPath => {
+            sincronizar(fileURLToPath, 4);
         });
 
         /* Comprueba si existe el archivo de configuracion y si no existe crea uno con valores vacios */ 
@@ -202,6 +208,21 @@ const sincronizarLocal = (fileURLToPath: any, config: any) => {
         vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
     }
 };
+
+const sincronizarSFTP = (fileURLToPath: any, config: any) => {
+    vscode.window.showInformationMessage(config.label);
+    try {
+        console.log("Ejecutando");
+		// Comprobar si terminal abierto!!!!??
+		terminal.show();
+		terminal.sendText(`ftp ${config.host}`);
+		terminal.sendText(`${config.user}`);
+		terminal.sendText(`${config.password}`);
+
+    } catch (err) {
+        vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
+    }
+}
 
 /* Mostrar el documento de configuracion de la extension */
 export const showTextDocument = (uri: vscode.Uri, option?: vscode.TextDocumentShowOptions) => {
