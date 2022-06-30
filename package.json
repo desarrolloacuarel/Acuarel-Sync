@@ -16,9 +16,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:acuarelsync.sync1",
-		"onCommand:acuarelsync.sync2",
-		"onCommand:acuarelsync.sync3",
+		"onCommand:acuarelsync.sync",
 		"onCommand:acuarelsync.configuration"
 	],
 	"main": "./out/extension.js",
@@ -32,20 +30,12 @@
 			],
 			"Acuarel": [
 				{
-					"command": "acuarelsync.sync1",
+					"command": "acuarelsync.sync",
 					"group": "acuarel.group@1"
 				},
 				{
-					"command": "acuarelsync.sync2",
-					"group": "acuarel.group@2"
-				},
-				{
-					"command": "acuarelsync.sync3",
-					"group": "acuarel.group@3"
-				},
-				{
 					"command": "acuarelsync.configuration",
-					"group": "acuarel.group@4"
+					"group": "acuarel.group@2"
 				}
 			]
 		},
@@ -57,24 +47,15 @@
 		],
 		"commands": [
 			{
-				"command": "acuarelsync.sync1",
-				"title": "Sincronizar Servidor 1",
+				"command": "acuarelsync.sync",
+				"title": "AcuarelSync...",
 				"group": "acuarel.group"
 			},
-			{
-				"command": "acuarelsync.sync2",
-				"title": "Sincronizar Servidor 2",
-				"group": "acuarel.group"
-			},
-			{
-				"command": "acuarelsync.sync3",
-				"title": "Sincronizar local con el Servidor",
-				"group": "acuarel.group"
-			},
+
 			{
 				"command": "acuarelsync.configuration",
-				"title": "Configuracion",
-				"group": "acuarel.group"
+				"title": "AcuarelSync Config",
+				"group": "acuarel.group@2"
 			}
 		]
 	},

@@ -40,29 +40,24 @@ export function activate(context: vscode.ExtensionContext) {
 
             const configuracion = buscarConfiguracion( );
 
-            switch(valor){
-                case 1: sincronizarServidor(path, configuracion.destinations[0]);break;
-                case 2: sincronizarServidor(path, configuracion.destinations[1]);break;
-                case 3: sincronizarLocal(path, configuracion.destinations[2]);break;
-            }
-        };
+			// Determinar que targets imos a procesar --<amosar opcions a usuario e actuar en consecuencia
+			console.log(`valor:${valor}`);
 
-        /* Sincronizar1 y Sincronizar2 sincronizan el servidor con los archivos locales*/
-        let sincronizar1 = vscode.commands.registerCommand('acuarelsync.sync1', fileURLToPath => {
+
+            // switch(valor){
+				//     case 1: sincronizarServidor(path, configuracion.destinations[0]);break;
+				//     case 2: sincronizarServidor(path, configuracion.destinations[1]);break;
+				//     case 3: sincronizarLocal(path, configuracion.destinations[2]);break;
+				// }
+		};
+
+
+        const doAcuarelSync = vscode.commands.registerCommand('acuarelsync.sync', fileURLToPath => {
             sincronizar(fileURLToPath, 1);
         });
 
-        let sincronizar2 = vscode.commands.registerCommand('acuarelsync.sync2', fileURLToPath => {
-            sincronizar(fileURLToPath, 2);
-        });
-
-        /* Sincronizar3 sincroniza el local con los archivos del servidor*/ 
-        let sincronizar3 = vscode.commands.registerCommand('acuarelsync.sync3', fileURLToPath => {
-            sincronizar(fileURLToPath, 3);
-        });
-
-        /* Comprueba si existe el archivo de configuracion y si no existe crea uno con valores vacios */ 
-        let crearConfiguracion = vscode.commands.registerCommand('acuarelsync.configuration', fileURLToPath => {
+        /* Comprueba si existe el archivo de configuracion y si no existe crea uno con valores vacios */
+        const createConfigFile = vscode.commands.registerCommand('acuarelsync.configuration', fileURLToPath => {
             var configPath = basepath + '/.vscode/acuarelsync.json';
 
             try {
@@ -81,32 +76,59 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             } catch (err) {
                 vscode.window.showInformationMessage("Creando un nuevo archivo de configuracion");
-                fse
-                    .outputJson(
+				/*
+				{
+						"_comment": "Allows filesync between local filesystems and ftp servers",
+						"_comment2": "Uses SSH access",
+						"destinations":[
+							{
+								"label": "My FTP --> Server 1",
+								"type": "ftp",
+								"host": "mydomain.com",
+								"port": 21,
+								"user": "usuario",
+								"password": "elpassword",
+								"destination": "/",
+								"parameters": "",
+								"ignore": []
+							},
+							{
+								"label": "My local --> Sync",
+								"destination": "",
+								"parameters": "",
+								"ignore": []
+							}
+
+						]
+					}
+				*/
+
+                fse.outputJson(
                         configPath,
                         {
-                            _comment: "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
-                            _comment2: "Uses SSH access",
-                            destinations:[
-                            {
-                                label: "",
-                                destination: "",
-                                parameters: "",
-                                ignore: []
-                            },
-                            {
-                                label: "",
-                                destination: "",
-                                parameters: "",
-                                ignore: []
-                            },
-                            {
-                                label: "",
-                                remote: "",
-                                parameters: "",
-                                ignore: []
-                            }
-                            ]
+
+						_comment 			: 'Allows filesync between local filesystems and ftp servers',
+						_comment2 			: 'Uses SSH access',
+						destinations 		: [
+							{
+								label		: 'My FTP --> Server 1',
+								type		: 'ftp',
+								host		: 'mydomain.com',
+								port		: 21,
+								user		: 'usuario',
+								password	: 'elpassword',
+								destination	: '/',
+								parameters	: '',
+								ignore		: []
+							},
+							{
+								label		: 'My local --> Sync',
+								destination	: '',
+								parameters	: '',
+								ignore	: []
+							}
+
+						]
                         },
                         { spaces: 4 }
                     )
@@ -114,10 +136,8 @@ export function activate(context: vscode.ExtensionContext) {
             }
         });
 
-        context.subscriptions.push(sincronizar1);
-        context.subscriptions.push(sincronizar2);
-        context.subscriptions.push(sincronizar3);
-        context.subscriptions.push(crearConfiguracion);
+        context.subscriptions.push(doAcuarelSync);
+        context.subscriptions.push(createConfigFile);
 
     } catch (err) {
         console.log(err);
