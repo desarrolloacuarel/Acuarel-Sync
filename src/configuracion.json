@@ -1,24 +1,24 @@
 {
-    "_comment": "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
+    "_comment": "Allows filesync between local filesystems and ftp servers",
     "_comment2": "Uses SSH access",
     "destinations":[
-    {
-        "label": "",
-        "destination": "",
-        "parameters": "",
-        "ignore": []
-    },
-    {
-        "label": "",
-        "destination": "",
-        "parameters": "",
-        "ignore": []
-    },
-    {
-        "label": "",
-        "remote": "",
-        "parameters": "",
-        "ignore": []
-    }
+		{
+			"label": "My FTP --> Server 1",
+			"type": "ftp",
+			"host": "pruebasweb.net",
+			"port": 21,
+			"user": "baulpruebas",
+			"password": "6zh5K2s#9",
+			"destination": "/httpdocs",
+			"parameters": "",
+			"ignore": []
+		},
+		{
+			"label": "My local --> Sync",
+			"destination": "",
+			"parameters": "",
+			"ignore": []
+		}
+	
     ]
 }
