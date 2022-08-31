@@ -21,7 +21,7 @@ Only can hold 3 destinations due to the limits of the menu integration.
 Upgrades and optimization in the code making it work better and either for windows or linux.
 
 ## Sample of use
-{
+
     "_comment": "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
     "_comment2": "Uses SSH access",
     "destinations":[
@@ -44,7 +44,7 @@ Upgrades and optimization in the code making it work better and either for windo
         "ignore": ['.png']
     }
     ]
-}
+
 
 ### 1.0.0
 
