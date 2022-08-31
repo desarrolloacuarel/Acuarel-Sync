@@ -20,6 +20,32 @@ Only can hold 3 destinations due to the limits of the menu integration.
 
 Upgrades and optimization in the code making it work better and either for windows or linux.
 
+## Sample of use
+{
+    "_comment": "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
+    "_comment2": "Uses SSH access",
+    "destinations":[
+    {
+        "label": "Sample name for copy remote to folder",
+        "destination": "/mnt/c/user/computer/documents/foldername",
+        "parameters": "-R -arvz",
+        "ignore": ['.png']
+    },
+    {
+        "label": "",
+        "destination": "",
+        "parameters": "",
+        "ignore": []
+    },
+    {
+        "label": "Sample name for copy folder to remote",
+        "remote": "sample.net@sample.net:/var/www/vhosts/sample.net/httpdocs",
+        "parameters": "-av",
+        "ignore": ['.png']
+    }
+    ]
+}
+
 ### 1.0.0
 
 Initial release of Acuarel Sync
