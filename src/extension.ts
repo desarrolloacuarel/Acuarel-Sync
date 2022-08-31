@@ -89,21 +89,21 @@ export function activate(context: vscode.ExtensionContext) {
                             _comment2: "Uses SSH access",
                             destinations:[
                             {
-                                label: "",
-                                destination: "",
-                                parameters: "",
+                                label: "Sample name for Dest. 1",
+                                destination: "Destination that can be a local folder (/mnt/c/Users/Computer/Documents/...) or a remote directory (ftpuser@host:/var/ww/vhosts/sample/httpdocs)",
+                                parameters: "-R -arvz",
                                 ignore: []
                             },
                             {
-                                label: "",
-                                destination: "",
-                                parameters: "",
+                                label: "Sample name for Dest. 2",
+                                destination: "Destination that can be a local folder (/mnt/c/Users/Computer/Documents/...) or a remote directory (ftpuser@host:/var/ww/vhosts/sample/httpdocs)",
+                                parameters: "-R -arvz",
                                 ignore: []
                             },
                             {
-                                label: "",
-                                remote: "",
-                                parameters: "",
+                                label: "Sample name for syncronize local with the server (Downloads the server directory to local)",
+                                remote: "ftpuser@host:/var/ww/vhosts/sample/httpdocs",
+                                parameters: "-R -arvz",
                                 ignore: []
                             }
                             ]
