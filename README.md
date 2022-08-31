@@ -22,28 +22,30 @@ Upgrades and optimization in the code making it work better and either for windo
 
 ## Sample of use
 
-    "_comment": "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
-    "_comment2": "Uses SSH access",
-    "destinations":[
+    
+    _comment: "Dest1 y Dest2 synchronize 2 diferent servers, Dest3 is for synchronizing local with a server files",
+    _comment2: "Uses SSH access",
+    destinations:[
     {
-        "label": "Sample name for copy remote to folder",
-        "destination": "/mnt/c/user/computer/documents/foldername",
-        "parameters": "-R -arvz",
-        "ignore": ['.png']
+        label: "Sample name for Dest. 1",
+        destination: "Destination that can be a local folder (/mnt/c/Users/Computer/Documents/...) or a remote directory (ftpuser@host:/var/ww/vhosts/sample/httpdocs)",
+        parameters: "-R -arvz",
+        ignore: []
     },
     {
-        "label": "",
-        "destination": "",
-        "parameters": "",
-        "ignore": []
+        label: "Sample name for Dest. 2",
+        destination: "Destination that can be a local folder (/mnt/c/Users/Computer/Documents/...) or a remote directory (ftpuser@host:/var/ww/vhosts/sample/httpdocs)",
+        parameters: "-R -arvz",
+        ignore: []
     },
     {
-        "label": "Sample name for copy folder to remote",
-        "remote": "sample.net@sample.net:/var/www/vhosts/sample.net/httpdocs",
-        "parameters": "-av",
-        "ignore": ['.png']
+        label: "Sample name for syncronize local with the server (Downloads the server directory to local)",
+        remote: "ftpuser@host:/var/ww/vhosts/sample/httpdocs",
+        parameters: "-R -arvz",
+        ignore: []
     }
     ]
+                        
 
 
 ### 1.0.0
