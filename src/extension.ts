@@ -158,13 +158,13 @@ const sincronizarServidor = (fileURLToPath: any, config: any) => {
 		let comandoIgnorar = "";
 		if (listaIgnorar.length > 0) {
 			for (let index = 0; index < listaIgnorar.length; index++) {
-				comandoIgnorar += `--exclude ${listaIgnorar[index]}`;
+				comandoIgnorar += ` --exclude ${listaIgnorar[index]}`;
 			}
 		}
 
 		// Comprobar si terminal abierto!!!!??
 		terminal.show();
-		terminal.sendText(textoIsWin+`rsync ${config.parameters} ${comandoIgnorar} '`+relativePath+`' '${config.destination}'`);
+		terminal.sendText(textoIsWin+`rsyncs ${config.parameters}${comandoIgnorar} '`+relativePath+`' '${config.destination}'`);
 
     } catch (err) {
         vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");
@@ -172,6 +172,7 @@ const sincronizarServidor = (fileURLToPath: any, config: any) => {
 };
 
 /* Sincronizar los archivos locales con los del servidor */
+
 const sincronizarLocal = (fileURLToPath: any, config: any) => {
     vscode.window.showInformationMessage(config.label);
     try {
@@ -190,13 +191,13 @@ const sincronizarLocal = (fileURLToPath: any, config: any) => {
 		let comandoIgnorar = "";
 		if (listaIgnorar.length > 0) {
 			for (let index = 0; index < listaIgnorar.length; index++) {
-				comandoIgnorar += `--exclude ${listaIgnorar[index]}`;
+				comandoIgnorar += ` --exclude ${listaIgnorar[index]}`;
 			}
 		}
 
 		// Comprobar si terminal abierto!!!!??
 		terminal.show();
-		terminal.sendText(textoIsWin+`rsync ${config.parameters} ${comandoIgnorar} '${config.remote}' '`+relativePath+`'`);
+		terminal.sendText(textoIsWin+`rsync ${config.parameters}${comandoIgnorar} '${config.remote}' '`+relativePath+`'`);
 
     } catch (err) {
         vscode.window.showInformationMessage("Se ha producido un error, ¿Existe el archivo de configuracion?");

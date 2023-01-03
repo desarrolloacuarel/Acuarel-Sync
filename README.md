@@ -30,7 +30,7 @@ Upgrades and optimization in the code making it work better and either for windo
         label: "Sample name for Dest. 1",
         destination: "Destination that can be a local folder (/mnt/c/Users/Computer/Documents/...) or a remote directory (ftpuser@host:/var/ww/vhosts/sample/httpdocs)",
         parameters: "-R -arvz",
-        ignore: []
+        ignore: [".git", "/src"]
     },
     {
         label: "Sample name for Dest. 2",
@@ -61,3 +61,6 @@ Code optimization and upgrades.
 Changes in the configuration file.
 
 Labels for each destination for custom notification on each execution.
+
+### 1.1.1
+Fixed error with excludes not working correctly
